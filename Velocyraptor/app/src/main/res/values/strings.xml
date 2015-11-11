@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">Velocyraptor</string>
-    <string name="title_activity_map">Map</string>
+    <string name="title_activity_map">Course</string>
+    
+    <string name="title_activity_stats">Statistiques</string>
+
+    <string name="title_section1">Cumulatif</string>
+    <string name="title_section2">Historique</string>
+    <string name="title_section3">Accomplissements</string>
+
+    <array name="race_types_stats">
+        <item>Courses à vélo</item>
+        <item>Courses à pied</item>
+    </array>
 </resources>
