@@ -45,4 +45,5 @@
         android:text="Calories totales : 8 906"
         android:id="@+id/textView4"
         android:layout_marginTop="10dp" />
+
 </LinearLayout>
