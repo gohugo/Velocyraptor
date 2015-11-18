@@ -33,7 +33,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:text="00:00:00"
+                        android:text="4:37"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -64,7 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="0,0"
+                        android:text="1,3"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -87,7 +87,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="0"
+                        android:text="366"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -95,7 +95,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Calories(kcal)"
+                        android:text="Calories"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
 
@@ -110,7 +110,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="00:00"
+                        android:text="1243"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -118,7 +118,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Rythme Moy"
+                        android:text="Pas"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
             </LinearLayout>

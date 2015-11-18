@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ca.qc.bdeb.p55.velocyraptor.StatsActivity">
+    <item android:id="@+id/menu_race" android:title="Course"
+        android:orderInCategory="100" app:showAsAction="always" />
+    <item android:id="@+id/menu_share" android:title="Partager" android:icon="@drawable/ic_share"
+        android:orderInCategory="100" app:showAsAction="ifRoom" />
+</menu>
