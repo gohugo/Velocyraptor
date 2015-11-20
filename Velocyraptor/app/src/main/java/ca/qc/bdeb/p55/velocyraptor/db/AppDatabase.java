@@ -45,9 +45,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                 ")");
         db.execSQL("create table achievements (" +
                 COL_ID + " integer primary key autoincrement," +
-                "reached tinyint not null," +
-                "descriptionFR string not null," +
-                "descriptionEN string not null" +
+                "reached tinyint not null default 0," +
                 ")");
     }
 
