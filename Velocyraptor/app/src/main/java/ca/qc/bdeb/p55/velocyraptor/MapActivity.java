@@ -14,6 +14,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Activité principale : carte et données de la course en cours.
+ * VOIR : https://developers.google.com/maps/documentation/android-api/intro
+ * https://developers.google.com/android/reference/com/google/android/gms/maps/GoogleMap
+ */
 public class MapActivity extends AppCompatActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
