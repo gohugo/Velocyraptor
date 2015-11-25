@@ -1,14 +1,22 @@
 package ca.qc.bdeb.p55.velocyraptor;
 
 import android.content.Intent;
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -19,9 +27,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * VOIR : https://developers.google.com/maps/documentation/android-api/intro
  * https://developers.google.com/android/reference/com/google/android/gms/maps/GoogleMap
  */
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends AppCompatActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
+
     private android.support.v7.widget.Toolbar toolbar;
 
     @Override
@@ -33,16 +47,38 @@ public class MapActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(800);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
 
 //        // Inflate a menu to be displayed in the toolbar
         //toolbar.inflateMenu(R.menu.menu_main);
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        googleApiClient.connect();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
 
+    @Override
+    protected void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
     }
 
 
@@ -79,6 +115,7 @@ public class MapActivity extends AppCompatActivity {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
@@ -97,4 +134,23 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onConnected(Bundle bundle) {
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        // ici on traite la nouvelle coordonnée
+    }
 }
