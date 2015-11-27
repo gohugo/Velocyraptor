@@ -123,7 +123,8 @@ public class SuperChronometer extends TextView {
         int seconds = (int)(remaining / 1000);
         remaining = (int)(remaining % (1000));
 
-        int milliseconds = (int)(((int)timeElapsed % 1000) / 100);
+        int milliseconds = (int)(((int)timeElapsed% 1000) / 10);
+//        int milliseconds = (int)(((int)timeElapsed % 1000) / 100);
 
         String text = "";
 
@@ -133,7 +134,7 @@ public class SuperChronometer extends TextView {
 
         text += df.format(minutes) + ":";
         text += df.format(seconds) + ":";
-        text += Integer.toString(milliseconds);
+        text += df.format(milliseconds);
 
         setText(text);
     }

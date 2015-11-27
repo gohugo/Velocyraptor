@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
+import ca.qc.bdeb.p55.velocyraptor.model.SuperChronometer;
+
 
 /**
  * Activité principale : carte et données de la course en cours.
@@ -45,7 +47,7 @@ public class MapActivity extends AppCompatActivity implements
 
     private ArrayList<Location> userPath;
 
-    private Chronometer chronometer;
+    private SuperChronometer chronometer;
     private android.support.v7.widget.Toolbar toolbar;
 
     @Override
@@ -54,7 +56,8 @@ public class MapActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-//        chronometer = (Chronometer) findViewById(R.id.mapactivity_chrono_temp);
+      chronometer = (SuperChronometer) findViewById(R.id.mapactivity_superChronometer_temp);
+        chronometer.start();
 
         setSupportActionBar(toolbar);
 
