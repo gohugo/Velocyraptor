@@ -2,9 +2,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <include
         android:id="@+id/my_awesome_toolbar"
         layout="@layout/toolbar" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,20 +32,21 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/mapactivity_lbl_temp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ca.qc.bdeb.p55.velocyraptor.model.SuperChronometer
+                        android:id="@+id/mapactivity_superChronometer_temp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:text="4:37"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                        android:gravity="center_vertical|center_horizontal" />
 
                     <TextView
                         android:id="@+id/mapactivity_lbl_dure"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|center_horizontal"
                         android:text="Durée"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
@@ -91,8 +94,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="366"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                     />
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
                         android:id="@+id/mapactivity_lbl_calorie"
