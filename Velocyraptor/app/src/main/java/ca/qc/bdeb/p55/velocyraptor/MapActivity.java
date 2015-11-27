@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+
 /**
  * Activité principale : carte et données de la course en cours.
  * VOIR : https://developers.google.com/maps/documentation/android-api/intro
@@ -31,10 +33,15 @@ public class MapActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
+    private static final String KEY_USER_PATH = "userpath";
+
     private GoogleMap googleMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
     private Location lastLocation;
+
+
+    private ArrayList<Location> userPath;
 
 
     private android.support.v7.widget.Toolbar toolbar;
@@ -59,7 +66,14 @@ public class MapActivity extends AppCompatActivity implements
         locationRequest.setFastestInterval(800);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-
+        Object savedPath = null;
+        if (savedInstanceState != null) {
+            savedPath = savedInstanceState.getSerializable(KEY_USER_PATH);
+        }
+        if (savedPath != null)
+            userPath = (ArrayList<Location>) savedPath;
+        else
+            userPath = new ArrayList<>();
 //        // Inflate a menu to be displayed in the toolbar
         //toolbar.inflateMenu(R.menu.menu_main);
     }
@@ -82,6 +96,10 @@ public class MapActivity extends AppCompatActivity implements
         super.onStop();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(KEY_USER_PATH, userPath);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,7 +113,7 @@ public class MapActivity extends AppCompatActivity implements
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_stats:
                 startActivity(new Intent(this, StatsActivity.class));
                 return true;
@@ -108,11 +126,11 @@ public class MapActivity extends AppCompatActivity implements
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
      * call {@link #setUpMap()} once when {@link #googleMap} is not null.
-     * <p>
+     * <p/>
      * If it isn't installed {@link SupportMapFragment} (and
      * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
      * install/update the Google Play services APK on their device.
-     * <p>
+     * <p/>
      * A user can return to this FragmentActivity after following the prompt and correctly
      * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
      * have been completely destroyed during this process (it is likely that it would only be
@@ -136,12 +154,15 @@ public class MapActivity extends AppCompatActivity implements
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * just add a marker near Africa.
-     * <p>
+     * <p/>
      * This should only be called once and when we are sure that {@link #googleMap} is not null.
      */
     private void setUpMap() {
-        //googleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
         googleMap.setMyLocationEnabled(true);
+
+        for (Location point : userPath) {
+            drawLineFromLastLocation(point);
+        }
     }
 
 
@@ -162,21 +183,26 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
-        if(lastLocation == null || lastLocation.distanceTo(location) > 1){
+        if (lastLocation == null || lastLocation.distanceTo(location) > 1) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(location), 15));
+            userPath.add(location);
 
-            if(lastLocation != null) {
-                googleMap.addPolyline(new PolylineOptions()
-                        .add(toLatLng(lastLocation), toLatLng(location))
-                        .width(5)
-                        .color(Color.BLUE));
-            }
-
-            lastLocation = location;
+            drawLineFromLastLocation(location);
         }
     }
 
-    private LatLng toLatLng(Location location){
+    private void drawLineFromLastLocation(Location to) {
+        if (lastLocation != null) {
+            googleMap.addPolyline(new PolylineOptions()
+                    .add(toLatLng(lastLocation), toLatLng(to))
+                    .width(5)
+                    .color(Color.BLUE));
+        }
+
+        lastLocation = to;
+    }
+
+    private LatLng toLatLng(Location location) {
         return new LatLng(location.getLatitude(), location.getLongitude());
     }
 }
