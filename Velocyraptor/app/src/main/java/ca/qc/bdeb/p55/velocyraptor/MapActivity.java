@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+
 /**
  * Activité principale : carte et données de la course en cours.
  * VOIR : https://developers.google.com/maps/documentation/android-api/intro
@@ -30,10 +32,14 @@ public class MapActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
+    private static final String KEY_USER_PATH = "userpath";
+
     private GoogleMap googleMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
     private Location lastLocation;
+
+    private ArrayList<Location> userPath;
 
     private android.support.v7.widget.Toolbar toolbar;
 
@@ -57,7 +63,11 @@ public class MapActivity extends AppCompatActivity implements
         locationRequest.setFastestInterval(800);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-
+        Object savedPath = savedInstanceState.getSerializable(KEY_USER_PATH);
+        if(savedPath != null)
+            userPath = (ArrayList<Location>) savedPath;
+        else
+            userPath = new ArrayList<>();
 //        // Inflate a menu to be displayed in the toolbar
         //toolbar.inflateMenu(R.menu.menu_main);
     }
@@ -80,6 +90,10 @@ public class MapActivity extends AppCompatActivity implements
         super.onStop();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+        outState.putSerializable(KEY_USER_PATH, userPath);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -129,8 +143,11 @@ public class MapActivity extends AppCompatActivity implements
      * This should only be called once and when we are sure that {@link #googleMap} is not null.
      */
     private void setUpMap() {
-        //googleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
         googleMap.setMyLocationEnabled(true);
+
+        for(Location point : userPath){
+            drawLineFromLastLocation(point);
+        }
     }
 
 
@@ -153,16 +170,21 @@ public class MapActivity extends AppCompatActivity implements
     public void onLocationChanged(Location location) {
         if(lastLocation == null || lastLocation.distanceTo(location) > 1){
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(location), 15));
+            userPath.add(location);
 
-            if(lastLocation != null) {
-                googleMap.addPolyline(new PolylineOptions()
-                        .add(toLatLng(lastLocation), toLatLng(location))
-                        .width(5)
-                        .color(Color.BLUE));
-            }
-
-            lastLocation = location;
+            drawLineFromLastLocation(location);
         }
+    }
+
+    private void drawLineFromLastLocation(Location to){
+        if(lastLocation != null) {
+            googleMap.addPolyline(new PolylineOptions()
+                    .add(toLatLng(lastLocation), toLatLng(to))
+                    .width(5)
+                    .color(Color.BLUE));
+        }
+
+        lastLocation = to;
     }
 
     private LatLng toLatLng(Location location){
