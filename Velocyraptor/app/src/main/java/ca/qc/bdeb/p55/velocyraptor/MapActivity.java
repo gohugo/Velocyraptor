@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Chronometer;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -49,6 +50,10 @@ public class MapActivity extends AppCompatActivity implements
 
     private SuperChronometer chronometer;
     private android.support.v7.widget.Toolbar toolbar;
+    private Button btnStart;
+    private Button btnStop;
+    private Button btnResume;
+    private Button btnPause;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,7 @@ public class MapActivity extends AppCompatActivity implements
         setUpMapIfNeeded();
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         chronometer = (SuperChronometer) findViewById(R.id.mapactivity_superChronometer_temp);
-        chronometer.start();
+        initialiserLesBoutons();
 
         setSupportActionBar(toolbar);
 
@@ -82,6 +87,13 @@ public class MapActivity extends AppCompatActivity implements
             userPath = new ArrayList<>();
 //        // Inflate a menu to be displayed in the toolbar
         //toolbar.inflateMenu(R.menu.menu_main);
+    }
+
+    private void initialiserLesBoutons() {
+        btnStart = (Button) findViewById(R.id.mapactivity_btn_start);
+        btnStop = (Button) findViewById(R.id.mapactivity_btn_Stop);
+        btnResume = (Button) findViewById(R.id.mapactivity_btn_resume);
+        btnPause = (Button) findViewById(R.id.mapactivity_btn_Pause);
     }
 
     @Override
