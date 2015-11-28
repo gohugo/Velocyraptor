@@ -3,6 +3,10 @@ package ca.qc.bdeb.p55.velocyraptor.model;
 /**
  * Created by hugo on 2015-11-28.
  */
+
+/*
+Classe qui contient les parametre de l'application
+ */
 public class Setting {
     public enum TypeDeCourse {
         APIED, VELO
@@ -23,5 +27,13 @@ public class Setting {
 
     public void setTypeDeCourse(TypeDeCourse typeDeCourse) {
         this.typeDeCourse = typeDeCourse;
+    }
+
+    public boolean isCourseEnCour() {
+        return courseEnCour;
+    }
+
+    public void setCourseEnCour(boolean courseEnCour) {
+        this.courseEnCour = courseEnCour;
     }
 }
