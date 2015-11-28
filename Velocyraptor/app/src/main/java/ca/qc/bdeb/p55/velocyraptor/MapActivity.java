@@ -56,7 +56,7 @@ public class MapActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-      chronometer = (SuperChronometer) findViewById(R.id.mapactivity_superChronometer_temp);
+        chronometer = (SuperChronometer) findViewById(R.id.mapactivity_superChronometer_temp);
         chronometer.start();
 
         setSupportActionBar(toolbar);
@@ -165,9 +165,10 @@ public class MapActivity extends AppCompatActivity implements
      */
     private void setUpMap() {
         googleMap.setMyLocationEnabled(true);
-
-        for (Location point : userPath) {
-            drawLineFromLastLocation(point);
+        if (userPath != null) {
+            for (Location point : userPath) {
+                drawLineFromLastLocation(point);
+            }
         }
     }
 
