@@ -113,7 +113,7 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 setting.setCourseEnCour(false);
-                chronometer.stop();
+                chronometer.pause();
                 btnPause.setVisibility(View.GONE);
                 btnResume.setVisibility(View.VISIBLE);
             }
@@ -122,12 +122,21 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 setting.setCourseEnCour(true);
-                long tempAfficher = chronometer.getTimeElapsed();
-                chronometer.setText(Long.toString(tempAfficher));
-//                chronometer.resume(tempAfficher);
-
+                chronometer.start();
                 btnPause.setVisibility(View.VISIBLE);
                 btnResume.setVisibility(View.GONE);
+            }
+        });
+        btnStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setting.setCourseEnCour(false);
+                chronometer.stop();
+                btnStart.setVisibility(View.VISIBLE);
+                btnResume.setVisibility(View.GONE);
+                btnPause.setVisibility(View.GONE);
+                btnStop.setVisibility(View.GONE);
+
             }
         });
     }

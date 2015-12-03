@@ -38,17 +38,9 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:gravity="center_vertical|center_horizontal" />
-
-                    <TextView
-                        android:id="@+id/mapactivity_lbl_dure"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="Durée"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                        android:textSize="40dp" />
+
                 </LinearLayout>
 
             </LinearLayout>
