@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
+import ca.qc.bdeb.p55.velocyraptor.model.Setting;
 import ca.qc.bdeb.p55.velocyraptor.model.SuperChronometer;
 
 
@@ -47,7 +49,7 @@ public class MapActivity extends AppCompatActivity implements
 
 
     private ArrayList<Location> userPath;
-
+    private Setting setting;
     private SuperChronometer chronometer;
     private android.support.v7.widget.Toolbar toolbar;
     private Button btnStart;
@@ -60,6 +62,7 @@ public class MapActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
+        setting = new Setting();
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         chronometer = (SuperChronometer) findViewById(R.id.mapactivity_superChronometer_temp);
         initialiserLesBoutons();
@@ -94,6 +97,39 @@ public class MapActivity extends AppCompatActivity implements
         btnStop = (Button) findViewById(R.id.mapactivity_btn_Stop);
         btnResume = (Button) findViewById(R.id.mapactivity_btn_resume);
         btnPause = (Button) findViewById(R.id.mapactivity_btn_Pause);
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setting.setCourseEnCour(true);
+                chronometer.start();
+                btnStart.setVisibility(View.GONE);
+                btnPause.setVisibility(View.VISIBLE);
+                btnStop.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setting.setCourseEnCour(false);
+                chronometer.stop();
+                btnPause.setVisibility(View.GONE);
+                btnResume.setVisibility(View.VISIBLE);
+            }
+        });
+        btnResume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setting.setCourseEnCour(true);
+                long tempAfficher = chronometer.getTimeElapsed();
+                chronometer.setText(Long.toString(tempAfficher));
+//                chronometer.resume(tempAfficher);
+
+                btnPause.setVisibility(View.VISIBLE);
+                btnResume.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -223,5 +259,13 @@ public class MapActivity extends AppCompatActivity implements
 
     private LatLng toLatLng(Location location) {
         return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    public Setting getSetting() {
+        return setting;
+    }
+
+    public void setSetting(Setting setting) {
+        this.setting = setting;
     }
 }

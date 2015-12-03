@@ -83,6 +83,10 @@ public class SuperChronometer extends TextView {
         mStarted = true;
         updateRunning();
     }
+    public void resume(long time){
+        mBase = SystemClock.elapsedRealtime();
+        mStarted = true;
+    }
 
     public void stop() {
         mStarted = false;
@@ -110,7 +114,7 @@ public class SuperChronometer extends TextView {
     }
 
     private synchronized void updateText(long now) {
-        timeElapsed = now - mBase;
+        timeElapsed = now - mBase ;
 
         DecimalFormat df = new DecimalFormat("00");
 
@@ -154,6 +158,7 @@ public class SuperChronometer extends TextView {
         }
     }
 
+
     private Handler mHandler = new Handler() {
         public void handleMessage(Message m) {
             if (mRunning) {
@@ -175,5 +180,8 @@ public class SuperChronometer extends TextView {
         return timeElapsed;
     }
 
+    public void setTimeElapsed(long timeElapsed) {
+        this.timeElapsed = timeElapsed;
+    }
 }
 
