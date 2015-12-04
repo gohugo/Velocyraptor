@@ -5,7 +5,8 @@
 
     <include
         android:id="@+id/my_awesome_toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar"
+      />
 
     <LinearLayout
         android:layout_width="match_parent"
