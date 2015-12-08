@@ -2,13 +2,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <include
         android:id="@+id/my_awesome_toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar"
+      />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="0.25"
         android:orientation="horizontal">
 
 
@@ -30,22 +33,15 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/mapactivity_lbl_temp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ca.qc.bdeb.p55.velocyraptor.model.SuperChronometer
+                        android:id="@+id/mapactivity_superChronometer_temp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:text="4:37"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                        android:gravity="center_vertical|center_horizontal"
+                        android:textSize="40dp" />
 
-                    <TextView
-                        android:id="@+id/mapactivity_lbl_dure"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Durée"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -130,13 +126,51 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.35">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/Stop"
+            android:id="@+id/mapactivity_btn_Stop"
+            android:layout_weight="1"
+            android:visibility="gone" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/Start"
+            android:id="@+id/mapactivity_btn_start"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/Resume"
+            android:id="@+id/mapactivity_btn_resume"
+            android:layout_weight="1"
+            android:visibility="gone" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/Pause"
+            android:id="@+id/mapactivity_btn_Pause"
+            android:layout_weight="1"
+            android:visibility="gone" />
+    </LinearLayout>
+
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="0.2"
         tools:context=".MapActivity" />
 
 </LinearLayout>

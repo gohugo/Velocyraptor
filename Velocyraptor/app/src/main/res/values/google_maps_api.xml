@@ -11,8 +11,11 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
 
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
+
+    Juste au cas, la nouvelle clé :
+    AIzaSyBl3wj7YBf3zlLAdf-pLqpmXJGMbsF5rxI
     -->
     <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
-   AIzaSyAWHtvASoJ1H4E8tNvpi9vK_ox6zHL70X8
+    AIzaSyBl3wj7YBf3zlLAdf-pLqpmXJGMbsF5rxI
     </string>
 </resources>

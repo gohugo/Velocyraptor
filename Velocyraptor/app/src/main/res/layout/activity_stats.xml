@@ -1,4 +1,16 @@
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/pager"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context="ca.qc.bdeb.p55.velocyraptor.StatsActivity" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/my_awesome_toolbar"
+        layout="@layout/toolbar" />
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="ca.qc.bdeb.p55.velocyraptor.StatsActivity" />
+</LinearLayout>
