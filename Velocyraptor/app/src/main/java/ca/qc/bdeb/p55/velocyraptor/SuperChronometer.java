@@ -179,12 +179,8 @@ public class SuperChronometer extends TextView {
         }
     }
 
-    public long getTimeElapsed() {
-        return timeElapsed;
-    }
-
-    public void setTimeElapsed(long timeElapsed) {
-        this.timeElapsed = timeElapsed;
+    public int getElapsedSeconds() {
+        return (int) (timeElapsed / 1000);
     }
 }
 

@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
+
 /**
  * Contient les données d'une course actuelle.
  */
@@ -14,7 +16,7 @@ public class Course implements Serializable {
         APIED, VELO
     }
 
-    private ArrayList<Location> userPath;
+    private ArrayList<RaceMarker> userPath;
 
     private TypeCourse typeCourse;
 
@@ -45,10 +47,25 @@ public class Course implements Serializable {
     }
 
     public List<Location> getPath(){
-        return userPath;
+        ArrayList<Location> locations = new ArrayList<>();
+
+        for(RaceMarker marker : userPath)
+            locations.add(marker.location);
+
+        return locations;
     }
 
-    public void addLocation(Location location){
-        userPath.add(location);
+    public void addLocation(int secondsFromStart, Location location){
+        userPath.add(new RaceMarker(secondsFromStart, location));
+    }
+
+    /**
+     * Enregistre cette course dans la BDD.
+     * @param duration Durée totale en secondes.
+     * @param calories Calories dépensées.
+     * @param steps Nombre de pas, ou n'importe quelle valeur si c'est une course à vélo.
+     */
+    public void endRaceAndSave(int duration, int calories, int steps){
+        AppDatabase.getInstance().addRace(userPath, typeCourse, duration, calories, steps);
     }
 }

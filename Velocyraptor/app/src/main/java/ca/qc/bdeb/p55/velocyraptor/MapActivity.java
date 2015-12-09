@@ -22,8 +22,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
-
+import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 
 
@@ -55,6 +54,7 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppDatabase.setApplicationContext(getApplicationContext());
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
@@ -204,8 +204,7 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * <p/>
      * This should only be called once and when we are sure that {@link #googleMap} is not null.
      */
@@ -240,7 +239,7 @@ public class MapActivity extends AppCompatActivity implements
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(location), 15));
 
             if(course != null) {
-                course.addLocation(location);
+                course.addLocation(chronometer.getElapsedSeconds(), location);
                 drawLineFromLastLocation(location);
             }
         }

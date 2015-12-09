@@ -4,6 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.List;
+
+import ca.qc.bdeb.p55.velocyraptor.model.Course;
+import ca.qc.bdeb.p55.velocyraptor.model.RaceMarker;
+
 /**
  * Base de données de l'application.
  */
@@ -56,6 +61,18 @@ public class AppDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+    /**
+     * Ajoute une course terminée et définit son chemin comme celui de la dernière course effectuée.
+     * @param markers Endroits où l'utilisateur est passé.
+     * @param typeCourse Type de course.
+     * @param duration Durée, en secondes.
+     * @param calories Nombre de calories dépensées.
+     * @param steps Nombre de pas effectués. Cette valeur sera ignorée si c'est une course à vélo.
+     */
+    public void addRace(List<RaceMarker> markers, Course.TypeCourse typeCourse, int duration, int calories, int steps){
 
     }
 }
