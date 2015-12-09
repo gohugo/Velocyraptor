@@ -1,4 +1,4 @@
-package ca.qc.bdeb.p55.velocyraptor.model;
+package ca.qc.bdeb.p55.velocyraptor;
 
 /**
  * Created by hugo on 2015-11-27.
@@ -179,12 +179,8 @@ public class SuperChronometer extends TextView {
         }
     }
 
-    public long getTimeElapsed() {
-        return timeElapsed;
-    }
-
-    public void setTimeElapsed(long timeElapsed) {
-        this.timeElapsed = timeElapsed;
+    public int getElapsedSeconds() {
+        return (int) (timeElapsed / 1000);
     }
 }
 
