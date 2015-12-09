@@ -1,4 +1,4 @@
-package ca.qc.bdeb.p55.velocyraptor.model;
+package ca.qc.bdeb.p55.velocyraptor;
 
 /**
  * Created by hugo on 2015-11-27.
