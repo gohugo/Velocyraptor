@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 public class SuperChronometer extends TextView {
     @SuppressWarnings("unused")
     private static final String TAG = "Chronometer";
+    private long lastTime;
 
     public interface OnChronometerTickListener {
 
@@ -45,7 +46,7 @@ public class SuperChronometer extends TextView {
     }
 
     public SuperChronometer(Context context, AttributeSet attrs) {
-        this (context, attrs, 0);
+        this(context, attrs, 0);
     }
 
     public SuperChronometer(Context context, AttributeSet attrs, int defStyle) {
@@ -83,13 +84,16 @@ public class SuperChronometer extends TextView {
         mStarted = true;
         updateRunning();
     }
-    public void resume(long time){
-        mBase = SystemClock.elapsedRealtime();
-        mStarted = true;
-    }
+
 
     public void stop() {
         mStarted = false;
+        lastTime=0;
+        updateRunning();
+    }
+    public void  pause(){
+        mStarted = false;
+        lastTime=timeElapsed;
         updateRunning();
     }
 
@@ -114,7 +118,7 @@ public class SuperChronometer extends TextView {
     }
 
     private synchronized void updateText(long now) {
-        timeElapsed = now - mBase ;
+        timeElapsed = now - mBase + lastTime;
 
         DecimalFormat df = new DecimalFormat("00");
 
@@ -127,8 +131,7 @@ public class SuperChronometer extends TextView {
         int seconds = (int)(remaining / 1000);
         remaining = (int)(remaining % (1000));
 
-        int milliseconds = (int)(((int)timeElapsed% 1000) / 10);
-//        int milliseconds = (int)(((int)timeElapsed % 1000) / 100);
+        int milliseconds = (int)(((int)timeElapsed % 1000) / 10);
 
         String text = "";
 
@@ -137,9 +140,9 @@ public class SuperChronometer extends TextView {
         }
 
         text += df.format(minutes) + ":";
-        text += df.format(seconds) + ":";
+        text += df.format(seconds) + ".";
+//        text += Integer.toString(milliseconds);
         text += df.format(milliseconds);
-
         setText(text);
     }
 
