@@ -32,7 +32,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <ca.qc.bdeb.p55.velocyraptor.model.SuperChronometer
+                    <ca.qc.bdeb.p55.velocyraptor.SuperChronometer
                         android:id="@+id/mapactivity_superChronometer_temp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

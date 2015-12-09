@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Chronometer;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,13 +20,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
-import ca.qc.bdeb.p55.velocyraptor.model.Setting;
-import ca.qc.bdeb.p55.velocyraptor.model.SuperChronometer;
+import ca.qc.bdeb.p55.velocyraptor.model.Course;
 
 
 /**
@@ -40,16 +37,14 @@ public class MapActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private static final String KEY_USER_PATH = "userpath";
+    private static final String KEY_USER_RACE = "userrace";
 
     private GoogleMap googleMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
     private Location lastLocation;
 
-
-    private ArrayList<Location> userPath;
-    private Setting setting;
+    private Course course;
     private SuperChronometer chronometer;
     private android.support.v7.widget.Toolbar toolbar;
     private Button btnStart;
@@ -62,7 +57,6 @@ public class MapActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
-        setting = new Setting();
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         chronometer = (SuperChronometer) findViewById(R.id.mapactivity_superChronometer_temp);
         initialiserLesBoutons();
@@ -80,16 +74,11 @@ public class MapActivity extends AppCompatActivity implements
         locationRequest.setFastestInterval(800);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        Object savedPath = null;
         if (savedInstanceState != null) {
-            savedPath = savedInstanceState.getSerializable(KEY_USER_PATH);
+            Object savedRace = savedInstanceState.getSerializable(KEY_USER_RACE);
+            if(savedRace != null)
+                course = (Course) savedRace;
         }
-        if (savedPath != null)
-            userPath = (ArrayList<Location>) savedPath;
-        else
-            userPath = new ArrayList<>();
-//        // Inflate a menu to be displayed in the toolbar
-        //toolbar.inflateMenu(R.menu.menu_main);
     }
 
     private void initialiserLesBoutons() {
@@ -101,7 +90,7 @@ public class MapActivity extends AppCompatActivity implements
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setting.setCourseEnCour(true);
+                course = new Course(Course.TypeCourse.APIED); // TODO choix type
                 chronometer.start();
                 btnStart.setVisibility(View.GONE);
                 btnPause.setVisibility(View.VISIBLE);
@@ -112,7 +101,7 @@ public class MapActivity extends AppCompatActivity implements
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setting.setCourseEnCour(false);
+                course.interrompre();
                 chronometer.stop();
                 btnPause.setVisibility(View.GONE);
                 btnResume.setVisibility(View.VISIBLE);
@@ -121,7 +110,7 @@ public class MapActivity extends AppCompatActivity implements
         btnResume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setting.setCourseEnCour(true);
+                course.redemarrer();
                 long tempAfficher = chronometer.getTimeElapsed();
                 chronometer.setText(Long.toString(tempAfficher));
 //                chronometer.resume(tempAfficher);
@@ -152,12 +141,12 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(KEY_USER_PATH, userPath);
+        if(course != null)
+            outState.putSerializable(KEY_USER_RACE, course);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -213,8 +202,8 @@ public class MapActivity extends AppCompatActivity implements
      */
     private void setUpMap() {
         googleMap.setMyLocationEnabled(true);
-        if (userPath != null) {
-            for (Location point : userPath) {
+        if (course != null) {
+            for (Location point : course.getPath()) {
                 drawLineFromLastLocation(point);
             }
         }
@@ -240,9 +229,11 @@ public class MapActivity extends AppCompatActivity implements
     public void onLocationChanged(Location location) {
         if (lastLocation == null || lastLocation.distanceTo(location) > 1) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(location), 15));
-            userPath.add(location);
 
-            drawLineFromLastLocation(location);
+            if(course != null) {
+                course.addLocation(location);
+                drawLineFromLastLocation(location);
+            }
         }
     }
 
@@ -259,13 +250,5 @@ public class MapActivity extends AppCompatActivity implements
 
     private LatLng toLatLng(Location location) {
         return new LatLng(location.getLatitude(), location.getLongitude());
-    }
-
-    public Setting getSetting() {
-        return setting;
-    }
-
-    public void setSetting(Setting setting) {
-        this.setting = setting;
     }
 }
