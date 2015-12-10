@@ -46,7 +46,7 @@ public class AppDatabase extends SQLiteOpenHelper {
     private final String TABLE_RACE_LENGTH = "length";
     private final String TABLE_RACE_DISTANCE = "distance";
     private final String TABLE_RACE_CALORIES = "calories";
-    private final String TABLE_RACE_STEPS = "calories";
+    private final String TABLE_RACE_STEPS = "steps";
 
 
     @Override
@@ -91,7 +91,7 @@ public class AppDatabase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase(); // On veut écrire dans la BD
         ContentValues values = new ContentValues();
-        System.out.println("ordinal Type de course");
+        System.out.println("ordinal Type de course = " +typeCourse.ordinal());
         values.put(TABLE_RACE_TYPE, typeCourse.ordinal()); // Nom du client
         values.put(TABLE_RACE_LENGTH, duration);
        //entrer la vrai distance

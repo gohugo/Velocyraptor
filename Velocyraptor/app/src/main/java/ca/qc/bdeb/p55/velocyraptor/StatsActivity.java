@@ -54,13 +54,18 @@ public class StatsActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_stats, menu);
 
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-
+        int position = item.getItemId();
+        switch (position) {
+            case R.id.menu_race:
+                finish();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
