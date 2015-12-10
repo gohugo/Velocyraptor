@@ -6,10 +6,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,18 +41,31 @@ public class MapActivity extends AppCompatActivity implements
 
     private static final String KEY_USER_RACE = "userrace";
 
-    private GoogleMap googleMap; // Might be null if Google Play services APK is not available.
-    private GoogleApiClient googleApiClient;
-    private LocationRequest locationRequest;
-    private Location lastLocation;
-
-    private Course course;
-    private SuperChronometer chronometer;
+    private GoogleMap googleMap;
+    private TextView chronometerText;
     private android.support.v7.widget.Toolbar toolbar;
     private Button btnStart;
     private Button btnStop;
     private Button btnResume;
     private Button btnPause;
+
+    private final Runnable onChronometerTick = new Runnable() {
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    chronometerText.setText(course.getFormattedElapsedTime());
+                }
+            });
+        }
+    };
+
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
+
+    private Course course;
+    private Location lastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +73,11 @@ public class MapActivity extends AppCompatActivity implements
         AppDatabase.setApplicationContext(getApplicationContext());
         setContentView(R.layout.activity_map);
         setUpMapIfNeeded();
+
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        chronometer = (SuperChronometer) findViewById(R.id.mapactivity_superChronometer_temp);
-        initialiserLesBoutons();
+        chronometerText = (TextView) findViewById(R.id.mapactivity_txt_chronometer);
+
+        initialiserBoutons();
 
         setSupportActionBar(toolbar);
 
@@ -76,12 +94,15 @@ public class MapActivity extends AppCompatActivity implements
 
         if (savedInstanceState != null) {
             Object savedRace = savedInstanceState.getSerializable(KEY_USER_RACE);
-            if(savedRace != null)
+            if(savedRace != null) {
                 course = (Course) savedRace;
+                switchButtonsToState(course.getState());
+                chronometerText.setText(course.getFormattedElapsedTime());
+            }
         }
     }
 
-    private void initialiserLesBoutons() {
+    private void initialiserBoutons() {
         btnStart = (Button) findViewById(R.id.mapactivity_btn_start);
         btnStop = (Button) findViewById(R.id.mapactivity_btn_Stop);
         btnResume = (Button) findViewById(R.id.mapactivity_btn_resume);
@@ -91,10 +112,8 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 course = new Course(Course.TypeCourse.APIED); // TODO choix type
-                chronometer.start();
-                btnStart.setVisibility(View.GONE);
-                btnPause.setVisibility(View.VISIBLE);
-                btnStop.setVisibility(View.VISIBLE);
+                course.setOnChronometerTick(onChronometerTick);
+                switchButtonsToState(Course.State.STARTED);
             }
         });
 
@@ -102,32 +121,48 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 course.interrompre();
-                chronometer.pause();
-                btnPause.setVisibility(View.GONE);
-                btnResume.setVisibility(View.VISIBLE);
+                switchButtonsToState(Course.State.PAUSED);
             }
         });
+
         btnResume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 course.redemarrer();
-                chronometer.start();
-                btnPause.setVisibility(View.VISIBLE);
-                btnResume.setVisibility(View.GONE);
+                switchButtonsToState(Course.State.STARTED);
             }
         });
+
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                chronometer.stop();
-                btnStart.setVisibility(View.VISIBLE);
-                btnResume.setVisibility(View.GONE);
-                btnPause.setVisibility(View.GONE);
-                btnStop.setVisibility(View.GONE);
-
+                course.endRaceAndSave(50, 50);
+                switchButtonsToState(Course.State.STOPPED);
             }
         });
+    }
+
+    private void switchButtonsToState(Course.State state){
+        switch (course.getState()) {
+            case STARTED:
+                btnStart.setVisibility(View.GONE);
+                btnPause.setVisibility(View.VISIBLE);
+                btnResume.setVisibility(View.GONE);
+                btnStop.setVisibility(View.VISIBLE);
+                break;
+            case PAUSED:
+                btnStart.setVisibility(View.GONE);
+                btnPause.setVisibility(View.GONE);
+                btnResume.setVisibility(View.VISIBLE);
+                btnStop.setVisibility(View.VISIBLE);
+                break;
+            case STOPPED:
+                btnStart.setVisibility(View.VISIBLE);
+                btnPause.setVisibility(View.GONE);
+                btnResume.setVisibility(View.GONE);
+                btnStop.setVisibility(View.GONE);
+                break;
+        }
     }
 
     @Override
@@ -140,11 +175,18 @@ public class MapActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+
+        if(course != null)
+            course.setOnChronometerTick(onChronometerTick);
     }
 
     @Override
     protected void onStop() {
         googleApiClient.disconnect();
+
+        if(course != null)
+            course.removeOnChronometerTick();
+
         super.onStop();
     }
 
@@ -238,8 +280,8 @@ public class MapActivity extends AppCompatActivity implements
         if (lastLocation == null || lastLocation.distanceTo(location) > 1) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(location), 15));
 
-            if(course != null) {
-                course.addLocation(chronometer.getElapsedSeconds(), location);
+            if(course != null && course.getState() == Course.State.STARTED) {
+                course.addLocation(location);
                 drawLineFromLastLocation(location);
             }
         }
