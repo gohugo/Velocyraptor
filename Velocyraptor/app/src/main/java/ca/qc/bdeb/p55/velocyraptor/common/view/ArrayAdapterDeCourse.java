@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,7 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<Course> {
 
     }
 
-    private class ClientHolder {
+    private class CourseHistoryHolder {
         TextView txtNom;
         TextView txtAge;
         TextView txtAddresse;
@@ -40,7 +39,7 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<Course> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        ClientHolder holder = null;
+        CourseHistoryHolder holder = null;
         Button button = null;
         final Course rowItem = getItem(position);
 
@@ -48,7 +47,7 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<Course> {
         if (convertView == null) {
 
             convertView = mInflater.inflate(R.layout.historique_une_course, null);
-            holder = new ClientHolder();
+            holder = new CourseHistoryHolder();
             //ici initialiser les component de la listview
 //            holder.txtNom = (TextView) convertView.findViewById(R.id.unclient_lbl_nom);
 
@@ -57,7 +56,7 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<Course> {
 
             convertView.setTag(holder);
         } else {
-            holder = (ClientHolder) convertView.getTag();
+            holder = (CourseHistoryHolder) convertView.getTag();
 
         }
 
