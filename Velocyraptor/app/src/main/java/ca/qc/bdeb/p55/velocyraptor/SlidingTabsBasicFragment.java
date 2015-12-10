@@ -57,15 +57,16 @@ public class SlidingTabsBasicFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_sample, container, false);
     }
 
     // BEGIN_INCLUDE (fragment_onviewcreated)
+
     /**
      * This is called after the {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)} has finished.
      * Here we can pick out the {@link View}s we need to configure from the content view.
-     *
+     * <p>
      * We set the {@link ViewPager}'s adapter to be an instance of {@link SamplePagerAdapter}. The
      * {@link SlidingTabLayout} is then given the {@link ViewPager} so that it can populate itself.
      *
@@ -114,6 +115,7 @@ public class SlidingTabsBasicFragment extends Fragment {
         }
 
         // BEGIN_INCLUDE (pageradapter_getpagetitle)
+
         /**
          * Return the title of the item at {@code position}. This is important as what this method
          * returns is what is displayed in the {@link SlidingTabLayout}.
@@ -142,16 +144,29 @@ public class SlidingTabsBasicFragment extends Fragment {
          */
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            // Inflate a new layout from our resources
-            View view = getActivity().getLayoutInflater().inflate(R.layout.pager_item,
-                    container, false);
-            // Add the newly created View to the ViewPager
-            container.addView(view);
+            View view = null;
+            switch (position) {
+                case 0:
+                    // Inflate a new layout from our resources
+                    view = getActivity().getLayoutInflater().inflate(R.layout.fragment_stats_cumulative,
+                            container, false);
+                    // Add the newly created View to the ViewPager
+                    container.addView(view);
+                    break;
+                case 1:
+                    view = getActivity().getLayoutInflater().inflate(R.layout.fragment_historique,
+                            container, false);
+                    // Add the newly created View to the ViewPager
+                    container.addView(view);
+                    break;
 
-            // Retrieve a TextView from the inflated View, and update it's text
-            TextView title = (TextView) view.findViewById(R.id.item_title);
-            title.setText(String.valueOf(position + 1));
-
+                case 2:
+                    view = getActivity().getLayoutInflater().inflate(R.layout.fragment_accomplissement,
+                            container, false);
+                    // Add the newly created View to the ViewPager
+                    container.addView(view);
+                    break;
+            }
 
 
             // Return the View
