@@ -6,13 +6,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,8 +29,6 @@ import ca.qc.bdeb.p55.velocyraptor.model.Course;
 
 /**
  * Activité principale : carte et données de la course en cours.
- * VOIR : https://developers.google.com/maps/documentation/android-api/intro
- * https://developers.google.com/android/reference/com/google/android/gms/maps/GoogleMap
  */
 public class MapActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -40,9 +36,13 @@ public class MapActivity extends AppCompatActivity implements
         LocationListener {
 
     private static final String KEY_USER_RACE = "userrace";
+    private static final String KEY_NB_STEPS = "nbsteps";
 
     private GoogleMap googleMap;
     private TextView chronometerText;
+    private TextView distanceText;
+    private TextView calorieText;
+    private TextView stepText;
     private android.support.v7.widget.Toolbar toolbar;
     private Button btnStart;
     private Button btnStop;
@@ -56,6 +56,25 @@ public class MapActivity extends AppCompatActivity implements
                 @Override
                 public void run() {
                     chronometerText.setText(course.getFormattedElapsedTime());
+
+                    int distance = course.getDistanceInMeters();
+                    StringBuilder distanceBuilder = new StringBuilder();
+                    // TODO virgule vs. point (anglais et français)
+                    if(distance < 1000) {
+                        distanceBuilder.append("0,");
+                        if(distance < 100)
+                            distanceBuilder.append("0");
+                        if(distance < 10)
+                            distanceBuilder.append("0");
+                        distanceBuilder.append(distance);
+                    } else {
+                        distanceBuilder.append(distance).insert(distanceBuilder.length() - 3, ",");
+                    }
+                    distanceText.setText(distanceBuilder.toString());
+
+                    calorieText.setText(String.valueOf(course.getCalories()));
+
+                    stepText.setText(String.valueOf(course.getNbCountedSteps()));
                 }
             });
         }
@@ -76,6 +95,9 @@ public class MapActivity extends AppCompatActivity implements
 
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         chronometerText = (TextView) findViewById(R.id.mapactivity_txt_chronometer);
+        distanceText = (TextView) findViewById(R.id.mapactivity_lbl_distancevalue);
+        calorieText = (TextView) findViewById(R.id.mapactivity_lbl_calorievalue);
+        stepText = (TextView) findViewById(R.id.mapactivity_lbl_rythmevalue);
 
         initialiserBoutons();
 
@@ -111,8 +133,10 @@ public class MapActivity extends AppCompatActivity implements
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                course = new Course(Course.TypeCourse.APIED); // TODO choix type
+                course = new Course(Course.TypeCourse.PIED); // TODO choix type
+                course.setContext(getApplicationContext());
                 course.setOnChronometerTick(onChronometerTick);
+                course.demarrer();
                 switchButtonsToState(Course.State.STARTED);
             }
         });
@@ -128,7 +152,7 @@ public class MapActivity extends AppCompatActivity implements
         btnResume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                course.redemarrer();
+                course.demarrer();
                 switchButtonsToState(Course.State.STARTED);
             }
         });
@@ -176,8 +200,14 @@ public class MapActivity extends AppCompatActivity implements
         super.onResume();
         setUpMapIfNeeded();
 
-        if(course != null)
+        if(course != null) {
             course.setOnChronometerTick(onChronometerTick);
+        }
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
     }
 
     @Override
@@ -192,8 +222,9 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if(course != null)
+        if(course != null) {
             outState.putSerializable(KEY_USER_RACE, course);
+        }
     }
 
     @Override
