@@ -20,16 +20,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ListView;
 
 
+import java.util.ArrayList;
 import java.util.Locale;
 
+import ca.qc.bdeb.p55.velocyraptor.common.view.ArrayAdapterDeCourse;
 import ca.qc.bdeb.p55.velocyraptor.common.view.SlidingTabLayout;
+import ca.qc.bdeb.p55.velocyraptor.model.Course;
 
 /**
  * A basic sample which shows how to use {@link ca.qc.bdeb.p55.velocyraptor.common.view.SlidingTabLayout}
@@ -150,6 +152,8 @@ public class SlidingTabsBasicFragment extends Fragment {
                     // Inflate a new layout from our resources
                     view = getActivity().getLayoutInflater().inflate(R.layout.fragment_stats_cumulative,
                             container, false);
+
+
                     // Add the newly created View to the ViewPager
                     container.addView(view);
                     break;
@@ -158,6 +162,22 @@ public class SlidingTabsBasicFragment extends Fragment {
                             container, false);
                     // Add the newly created View to the ViewPager
                     container.addView(view);
+
+                    ListView listView = (ListView) view.findViewById(R.id.historiquecourse_lstview);
+                    ArrayList<Course> lstCourse = new ArrayList<>();
+                    lstCourse.add(new Course(Course.TypeCourse.APIED));
+                    lstCourse.add(new Course(Course.TypeCourse.APIED));
+                    lstCourse.add(new Course(Course.TypeCourse.APIED));
+                    lstCourse.add(new Course(Course.TypeCourse.APIED));
+                    lstCourse.add(new Course(Course.TypeCourse.APIED));
+                    lstCourse.add(new Course(Course.TypeCourse.APIED));
+                    lstCourse.add(new Course(Course.TypeCourse.APIED));
+                    lstCourse.add(new Course(Course.TypeCourse.APIED));
+                    lstCourse.add(new Course(Course.TypeCourse.APIED));
+
+                    ArrayAdapterDeCourse adapterDeCourse = new ArrayAdapterDeCourse(getActivity(), R.layout.historique_une_course, lstCourse);
+                    listView.setAdapter(adapterDeCourse);
+
                     break;
 
                 case 2:
