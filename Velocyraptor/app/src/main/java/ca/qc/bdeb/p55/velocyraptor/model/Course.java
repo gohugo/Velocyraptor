@@ -84,7 +84,7 @@ public class Course implements Serializable {
     }
 
     public enum TypeCourse {
-        APIED, VELO
+        APIED, VELO, AUCUN
     }
 
     public enum State {

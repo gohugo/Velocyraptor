@@ -49,6 +49,7 @@ public class AppDatabase extends SQLiteOpenHelper {
     private final String TABLE_RACE_STEPS = "steps";
 
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_RACE + " (" +
