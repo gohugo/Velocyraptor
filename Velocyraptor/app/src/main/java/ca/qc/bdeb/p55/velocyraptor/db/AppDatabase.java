@@ -19,8 +19,23 @@ public class AppDatabase extends SQLiteOpenHelper {
 
     private static final String COL_ID = "_id";
 
-    private static AppDatabase instance;
+    private static final String TABLE_RACES = "races";
+    private static final String TABLE_RACES_TYPE = "type";
+    private static final String TABLE_RACES_LENGTH = "length";
+    private static final String TABLE_RACES_DISTANCE = "distance";
+    private static final String TABLE_RACES_CALORIES = "calories";
+    private static final String TABLE_RACES_STEPS = "steps";
 
+    private static final String TABLE_ACHIEVEMENTS = "achievements";
+    private static final String TABLE_ACHIEVEMENTS_REACHED = "reached";
+
+    private static final String TABLE_LASTFOOTRACE = "lastfootrace";
+    private static final String TABLE_LASTBIKERACE = "lastbikerace";
+    private static final String TABLE_RACE_SECONDSFROMSTART = "seconds";
+    private static final String TABLE_RACE_LONGITUDE = "longitude";
+    private static final String TABLE_RACE_LATITUDE = "latitude";
+
+    private static AppDatabase instance;
 
     /**
      * Définit le contexte d'application pour la BDD. Doît être applée au minimum au
@@ -41,33 +56,30 @@ public class AppDatabase extends SQLiteOpenHelper {
         super(applicationContext, DB_NAME, null, DB_VERSION);
     }
 
-    private final String TABLE_RACE = "races";
-    private final String TABLE_RACE_TYPE = "type";
-    private final String TABLE_RACE_LENGTH = "length";
-    private final String TABLE_RACE_DISTANCE = "distance";
-    private final String TABLE_RACE_CALORIES = "calories";
-    private final String TABLE_RACE_STEPS = "steps";
-
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_RACE + " (" +
+        db.execSQL("create table " + TABLE_RACES + " (" +
                 COL_ID + " integer primary key autoincrement," +
-                TABLE_RACE_TYPE + " integer not null," +
-                TABLE_RACE_LENGTH + " integer not null," +
-                TABLE_RACE_DISTANCE + " integer not null," +
-                TABLE_RACE_CALORIES + " integer not null," +
-                TABLE_RACE_STEPS + " integer" +
+                TABLE_RACES_TYPE + " integer not null," +
+                TABLE_RACES_LENGTH + " integer not null," +
+                TABLE_RACES_DISTANCE + " integer not null," +
+                TABLE_RACES_CALORIES + " integer not null," +
+                TABLE_RACES_STEPS + " integer" +
                 ")");
-        db.execSQL("create table achievements (" +
+        db.execSQL("create table " + TABLE_ACHIEVEMENTS + " (" +
                 COL_ID + " integer primary key autoincrement," +
-                "reached tinyint not null default 0" +
+                TABLE_ACHIEVEMENTS_REACHED + " tinyint not null default 0" +
                 ")");
-        db.execSQL("create table lastrace (" +
-                "seconds real not null," +
-                "longitude real not null," +
-                "latitude real not null" +
+        db.execSQL("create table " + TABLE_LASTFOOTRACE + " (" +
+                TABLE_RACE_SECONDSFROMSTART + " real not null," +
+                TABLE_RACE_LONGITUDE + " real not null," +
+                TABLE_RACE_LATITUDE + " real not null" +
+                ")");
+        db.execSQL("create table " + TABLE_LASTBIKERACE + " (" +
+                TABLE_RACE_SECONDSFROMSTART + " real not null," +
+                TABLE_RACE_LONGITUDE + " real not null," +
+                TABLE_RACE_LATITUDE + " real not null" +
                 ")");
     }
 
@@ -80,28 +92,32 @@ public class AppDatabase extends SQLiteOpenHelper {
      * Ajoute une course terminée et définit son chemin comme celui de la dernière course effectuée.
      *
      * @param markers    Endroits où l'utilisateur est passé.
-     * @param typeCourse Type de course.
-     * @param duration   Durée, en secondes.
-     * @param calories   Nombre de calories dépensées.
-     * @param steps      Nombre de pas effectués. Cette valeur sera ignorée si c'est une course à vélo.
+     * @param course     Course.
      */
+    public void addRace(List<RaceMarker> markers, Course course) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
-
-    public void addRace(List<RaceMarker> markers, Course.TypeCourse typeCourse, int duration, int calories, int steps) {
-
-
-        SQLiteDatabase db = this.getWritableDatabase(); // On veut écrire dans la BD
         ContentValues values = new ContentValues();
-        System.out.println("ordinal Type de course = " +typeCourse.ordinal());
-        values.put(TABLE_RACE_TYPE, typeCourse.ordinal()); // Nom du client
-        values.put(TABLE_RACE_LENGTH, duration);
-       //entrer la vrai distance
-        values.put(TABLE_RACE_DISTANCE, 0);
-        values.put(TABLE_RACE_CALORIES, calories);
-        values.put(TABLE_RACE_STEPS, steps);
-        long id = db.insert(TABLE_RACE, null, values);
-        db.close(); // Fermer la connexion
+        values.put(TABLE_RACES_TYPE, course.getTypeCourse().ordinal());
+        values.put(TABLE_RACES_LENGTH, course.getElapsedSeconds());
+        values.put(TABLE_RACES_DISTANCE, course.getDistanceInMeters());
+        values.put(TABLE_RACES_CALORIES, course.getCalories());
+        if(course.getTypeCourse() == Course.TypeCourse.APIED)
+            values.put(TABLE_RACES_STEPS, course.getNbCountedSteps());
+        db.insert(TABLE_RACES, null, values);
 
+        String tableContainingThisRace = (course.getTypeCourse() == Course.TypeCourse.APIED
+                ? TABLE_LASTFOOTRACE : TABLE_LASTFOOTRACE);
+        db.delete(tableContainingThisRace, null, null);
 
+        for(RaceMarker marker : markers){
+            values = new ContentValues();
+            values.put(TABLE_RACE_SECONDSFROMSTART, marker.getSecondsFromStart());
+            values.put(TABLE_RACE_LONGITUDE, marker.getLocation().getLongitude());
+            values.put(TABLE_RACE_LATITUDE, marker.getLocation().getLatitude());
+            db.insert(tableContainingThisRace, null, values);
+        }
+
+        db.close();
     }
 }

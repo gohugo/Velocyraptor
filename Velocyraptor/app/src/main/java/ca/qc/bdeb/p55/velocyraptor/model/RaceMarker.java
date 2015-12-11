@@ -12,12 +12,20 @@ import java.io.Serializable;
  * Un point dans une course à un instant donné.
  */
 public class RaceMarker implements Serializable {
-    public final int secondsFromStart;
-    transient public Location location;
+    private final int secondsFromStart;
+    transient private Location location;
 
     public RaceMarker(int seconds, Location p_location){
         secondsFromStart = seconds;
         location = p_location;
+    }
+
+    public int getSecondsFromStart(){
+        return secondsFromStart;
+    }
+
+    public Location getLocation(){
+        return location;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
