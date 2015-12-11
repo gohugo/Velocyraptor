@@ -160,7 +160,7 @@ public class MapActivity extends AppCompatActivity implements
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                course.endRaceAndSave(50, 50);
+                course.endRaceAndSave();
                 switchButtonsToState(Course.State.STOPPED);
             }
         });

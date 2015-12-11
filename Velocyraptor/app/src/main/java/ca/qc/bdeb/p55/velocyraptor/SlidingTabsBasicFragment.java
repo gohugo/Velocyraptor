@@ -165,15 +165,15 @@ public class SlidingTabsBasicFragment extends Fragment {
 
                     ListView listView = (ListView) view.findViewById(R.id.historiquecourse_lstview);
                     ArrayList<Course> lstCourse = new ArrayList<>();
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
+                    lstCourse.add(new Course(Course.TypeCourse.PIED));
+                    lstCourse.add(new Course(Course.TypeCourse.PIED));
+                    lstCourse.add(new Course(Course.TypeCourse.PIED));
+                    lstCourse.add(new Course(Course.TypeCourse.PIED));
+                    lstCourse.add(new Course(Course.TypeCourse.PIED));
+                    lstCourse.add(new Course(Course.TypeCourse.PIED));
+                    lstCourse.add(new Course(Course.TypeCourse.PIED));
+                    lstCourse.add(new Course(Course.TypeCourse.PIED));
+                    lstCourse.add(new Course(Course.TypeCourse.PIED));
 
                     ArrayAdapterDeCourse adapterDeCourse = new ArrayAdapterDeCourse(getActivity(), R.layout.historique_une_course, lstCourse);
                     listView.setAdapter(adapterDeCourse);

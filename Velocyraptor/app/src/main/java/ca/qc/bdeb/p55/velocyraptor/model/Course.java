@@ -28,8 +28,9 @@ public class Course implements Serializable {
     public Course(TypeCourse typeCourse) {
         this.typeCourse = typeCourse;
         state = State.STOPPED;
-        userPath = new ArrayList<>();
         distance = 0;
+
+        userPath = new ArrayList<>();
         chronometer = new CustomChronometer();
         stepCounter = new CustomStepCounter();
     }
@@ -49,13 +50,17 @@ public class Course implements Serializable {
     public void interrompre(){
         state = State.PAUSED;
         chronometer.stop();
-        stepCounter.stop();
+
+        if(typeCourse == TypeCourse.PIED)
+            stepCounter.stop();
     }
 
     public void demarrer(){
         state = State.STARTED;
         chronometer.start();
-        stepCounter.start();
+
+        if(typeCourse == TypeCourse.PIED)
+            stepCounter.start();
     }
 
     public List<Location> getPath(){
@@ -72,11 +77,16 @@ public class Course implements Serializable {
             Location lastLocation = userPath.get(userPath.size() - 1).getLocation();
             distance += lastLocation.distanceTo(location);
         }
+
         userPath.add(new RaceMarker(chronometer.getElapsedSeconds(), location));
     }
 
     public String getFormattedElapsedTime(){
         return chronometer.toString();
+    }
+
+    public int getElapsedSeconds(){
+        return chronometer.getElapsedSeconds();
     }
 
     public int getDistanceInMeters(){
@@ -105,13 +115,11 @@ public class Course implements Serializable {
 
     /**
      * Enregistre cette course dans la BDD.
-     * @param calories Calories dépensées.
-     * @param steps Nombre de pas, ou n'importe quelle valeur si c'est une course à vélo.
      */
-    public void endRaceAndSave(int calories, int steps){
+    public void endRaceAndSave(){
         chronometer.stop();
         state = State.STOPPED;
-        AppDatabase.getInstance().addRace(userPath, typeCourse, chronometer.getElapsedSeconds(), calories, steps);
+        AppDatabase.getInstance().addRace(userPath, this);
     }
 
     public enum TypeCourse {
