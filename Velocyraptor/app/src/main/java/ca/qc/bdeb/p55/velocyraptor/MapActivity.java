@@ -47,7 +47,7 @@ public class MapActivity extends AppCompatActivity implements
     private static final int MAP_LINE_WIDTH = 3;
 
     private GoogleMap googleMap;
-    private TextView chronometerText;
+    public static TextView chronometerText;
     private TextView distanceText;
     private TextView calorieText;
     private TextView stepText;
@@ -372,5 +372,12 @@ public class MapActivity extends AppCompatActivity implements
 
     private LatLng toLatLng(Location location) {
         return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+
+
+    public static  String getDisplayedTime(){
+        return chronometerText.getText().toString();
+
     }
 }

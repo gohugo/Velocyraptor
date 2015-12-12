@@ -11,6 +11,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.qc.bdeb.p55.velocyraptor.MapActivity;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
 import ca.qc.bdeb.p55.velocyraptor.model.RaceMarker;
@@ -102,7 +103,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         int bob = course.getTypeCourse().ordinal();
         values.put(TABLE_RACES_TYPE, course.getTypeCourse().ordinal());
-        values.put(TABLE_RACES_LENGTH, course.getFormattedElapsedTime());
+        values.put(TABLE_RACES_LENGTH, MapActivity.getDisplayedTime());
         values.put(TABLE_RACES_DISTANCE, course.getDistanceInMeters());
         values.put(TABLE_RACES_CALORIES, course.getCalories());
         if (course.getTypeCourse() == Course.TypeCourse.APIED)
