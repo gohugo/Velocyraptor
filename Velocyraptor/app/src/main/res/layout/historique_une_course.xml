@@ -112,4 +112,28 @@
             android:gravity="center" />
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/historiquecourse_layout_nbpas">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre de pas:"
+            android:id="@+id/historiquecourse_lbl_nbpas"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:singleLine="false" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/historiquecourse_lbl_nbpasvalue"
+            android:layout_weight="1"
+            android:gravity="center" />
+    </LinearLayout>
+
 </LinearLayout>
