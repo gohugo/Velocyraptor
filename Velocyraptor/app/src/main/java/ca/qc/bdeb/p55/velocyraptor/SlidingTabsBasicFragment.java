@@ -23,12 +23,18 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
-
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
+import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
 import ca.qc.bdeb.p55.velocyraptor.common.view.ArrayAdapterDeCourse;
 import ca.qc.bdeb.p55.velocyraptor.common.view.SlidingTabLayout;
 import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
@@ -43,6 +49,12 @@ import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
 public class SlidingTabsBasicFragment extends Fragment {
 
     static final String LOG_TAG = "SlidingTabsBasicFragment";
+
+    private static final Map<Integer, Course.TypeCourse> raceTypeSpinnerPositionToType = new HashMap<>();
+    static {
+        raceTypeSpinnerPositionToType.put(0, Course.TypeCourse.VELO);
+        raceTypeSpinnerPositionToType.put(1, Course.TypeCourse.APIED);
+    }
 
     /**
      * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
@@ -156,6 +168,7 @@ public class SlidingTabsBasicFragment extends Fragment {
                     view = getActivity().getLayoutInflater().inflate(R.layout.fragment_stats_cumulative,
                             container, false);
 
+                    populateCumulativeStatsView(view);
 
                     // Add the newly created View to the ViewPager
                     container.addView(view);
@@ -189,14 +202,57 @@ public class SlidingTabsBasicFragment extends Fragment {
         }
 
         /**
+         * Dans une vue, remplit les données cumulatives en définissant le contenu des
+         * vues du fragment en conséquence.
+         * @param statsFragmentView Vue de statistiques cumulatives.
+         */
+        private void populateCumulativeStatsView(final View statsFragmentView){
+            Spinner raceTypeChooser = (Spinner) statsFragmentView.findViewById(R.id.stats_spin_racetype);
+
+            raceTypeChooser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    updateCumulativeStatsView(statsFragmentView, raceTypeSpinnerPositionToType.get(position));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+
+            updateCumulativeStatsView(statsFragmentView, raceTypeSpinnerPositionToType.get(0));
+        }
+
+        private void updateCumulativeStatsView(View view, Course.TypeCourse typeCourse){
+            final AppDatabase db = AppDatabase.getInstance();
+
+            TextView nbRacesLabel = (TextView) view.findViewById(R.id.stats_lbl_nbraces);
+            TextView durationLabel = (TextView) view.findViewById(R.id.stats_lbl_totalduration);
+            TextView distanceLabel = (TextView) view.findViewById(R.id.stats_lbl_totaldistance);
+            TextView caloriesLabel = (TextView) view.findViewById(R.id.stats_lbl_totalcalories);
+            TextView stepsLabel = (TextView) view.findViewById(R.id.stats_lbl_nbsteps);
+
+            nbRacesLabel.setText(getString(R.string.nbraces) + " " + db.getNumberRaces(typeCourse));
+            durationLabel.setText(getString(R.string.totalduration) + " "
+                    + Formatting.formatNiceDuration(db.getTotalDuration(typeCourse)));
+            distanceLabel.setText(getString(R.string.totaldistance) + " "
+                    + Formatting.formatDistance(db.getTotalDistance(typeCourse)));
+            caloriesLabel.setText(getString(R.string.totalcalories) + " " + db.getTotalCalories(typeCourse));
+
+            if(typeCourse == Course.TypeCourse.APIED) {
+                stepsLabel.setVisibility(View.VISIBLE);
+                stepsLabel.setText(getString(R.string.totalsteps) + " " + db.getTotalSteps());
+            } else {
+                stepsLabel.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        /**
          * Destroy the item from the {@link ViewPager}. In our case this is simply removing the
          * {@link View}.
          */
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
-
         }
-
     }
 }

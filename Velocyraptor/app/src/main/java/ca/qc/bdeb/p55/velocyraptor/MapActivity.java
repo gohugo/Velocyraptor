@@ -1,7 +1,5 @@
 package ca.qc.bdeb.p55.velocyraptor;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -22,11 +20,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.List;
+
+import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
 import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
+import ca.qc.bdeb.p55.velocyraptor.model.Ghost;
+import ca.qc.bdeb.p55.velocyraptor.model.RaceMarker;
 
 
 /**
@@ -38,7 +42,9 @@ public class MapActivity extends AppCompatActivity implements
         LocationListener {
 
     private static final String KEY_USER_RACE = "userrace";
-    private static final String KEY_NB_STEPS = "nbsteps";
+    private static final String KEY_GHOST = "ghost";
+
+    private static final int MAP_LINE_WIDTH = 3;
 
     private GoogleMap googleMap;
     private TextView chronometerText;
@@ -59,25 +65,10 @@ public class MapActivity extends AppCompatActivity implements
                 @Override
                 public void run() {
                     chronometerText.setText(course.getFormattedElapsedTime());
-
-                    int distance = course.getDistanceInMeters();
-                    StringBuilder distanceBuilder = new StringBuilder();
-                    // TODO virgule vs. point (anglais et français)
-                    if (distance < 1000) {
-                        distanceBuilder.append("0,");
-                        if (distance < 100)
-                            distanceBuilder.append("0");
-                        if (distance < 10)
-                            distanceBuilder.append("0");
-                        distanceBuilder.append(distance);
-                    } else {
-                        distanceBuilder.append(distance).insert(distanceBuilder.length() - 3, ",");
-                    }
-                    distanceText.setText(distanceBuilder.toString());
-
+                    distanceText.setText(Formatting.formatDistance(course.getDistanceInMeters()));
                     calorieText.setText(String.valueOf(course.getCalories()));
-
                     stepText.setText(String.valueOf(course.getNbCountedSteps()));
+                    drawGhostPath(ghost.getNextMarkersAt(course.getElapsedSeconds()));
                 }
             });
         }
@@ -86,15 +77,19 @@ public class MapActivity extends AppCompatActivity implements
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
 
+    /** Vrai si un zoom s'est fait à l'emplacement de l'utilisateur au moins une fois. */
+    private boolean hasMovedOnceToUserLocation = false;
+
     private Course course;
     private Location lastLocation;
+    private Ghost ghost;
+    private Location lastGhostLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppDatabase.setApplicationContext(getApplicationContext());
         setContentView(R.layout.activity_map);
-        setUpMapIfNeeded();
 
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         chronometerText = (TextView) findViewById(R.id.mapactivity_txt_chronometer);
@@ -121,7 +116,8 @@ public class MapActivity extends AppCompatActivity implements
             Object savedRace = savedInstanceState.getSerializable(KEY_USER_RACE);
             if (savedRace != null) {
                 course = (Course) savedRace;
-                switchButtonsToState(course.getState());
+                ghost = (Ghost) savedInstanceState.getSerializable(KEY_GHOST);
+                switchButtonsToCurrentRaceState();
                 chronometerText.setText(course.getFormattedElapsedTime());
             }
         }
@@ -135,14 +131,18 @@ public class MapActivity extends AppCompatActivity implements
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
-
             public void onClick(View v) {
                 course = new Course(Course.TypeCourse.APIED); // TODO choix type
+                ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.APIED);
                 course.setContext(getApplicationContext());
                 course.setOnChronometerTick(onChronometerTick);
                 course.demarrer();
-                switchButtonsToState(Course.State.STARTED);
 
+                if(lastLocation != null)
+                    moveUserToOnMap(lastLocation);
+
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
             }
         });
 
@@ -150,7 +150,8 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 course.interrompre();
-                switchButtonsToState(Course.State.PAUSED);
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
             }
         });
 
@@ -158,7 +159,8 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 course.demarrer();
-                switchButtonsToState(Course.State.STARTED);
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
             }
         });
 
@@ -166,12 +168,13 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 course.endRaceAndSave();
-                switchButtonsToState(Course.State.STOPPED);
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(true);
             }
         });
     }
 
-    private void switchButtonsToState(Course.State state) {
+    private void switchButtonsToCurrentRaceState() {
         switch (course.getState()) {
             case STARTED:
                 btnStart.setVisibility(View.GONE);
@@ -192,6 +195,12 @@ public class MapActivity extends AppCompatActivity implements
                 btnStop.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    private void setMapControlsEnabled(boolean areEnabled){
+        UiSettings settings = googleMap.getUiSettings();
+        settings.setZoomControlsEnabled(areEnabled);
+        settings.setAllGesturesEnabled(areEnabled);
     }
 
     @Override
@@ -227,10 +236,9 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-
         if (course != null) {
-
             outState.putSerializable(KEY_USER_RACE, course);
+            outState.putSerializable(KEY_GHOST, ghost);
         }
     }
 
@@ -294,6 +302,8 @@ public class MapActivity extends AppCompatActivity implements
             for (Location point : course.getPath()) {
                 drawLineFromLastLocation(point);
             }
+
+            drawGhostPath(ghost.getReadMarkers());
         }
     }
 
@@ -315,25 +325,49 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
-        if (lastLocation == null || lastLocation.distanceTo(location) > 1) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(location), 15));
+        if (!hasMovedOnceToUserLocation || course != null && course.getState() != Course.State.STOPPED
+                && (lastLocation == null || lastLocation.distanceTo(location) > 1)) {
+            moveUserToOnMap(location);
 
             if (course != null && course.getState() == Course.State.STARTED) {
                 course.addLocation(location);
                 drawLineFromLastLocation(location);
             }
+
+            hasMovedOnceToUserLocation = true;
         }
+    }
+
+    private void moveUserToOnMap(Location to){
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(to), 16));
     }
 
     private void drawLineFromLastLocation(Location to) {
         if (lastLocation != null) {
             googleMap.addPolyline(new PolylineOptions()
                     .add(toLatLng(lastLocation), toLatLng(to))
-                    .width(5)
+                    .width(MAP_LINE_WIDTH)
                     .color(Color.BLUE));
         }
 
         lastLocation = to;
+    }
+
+    private void drawGhostPath(List<RaceMarker> markers){
+        for(RaceMarker marker : ghost.getReadMarkers()){
+            if(lastGhostLocation != null) {
+                drawGhostLine(lastGhostLocation, marker.getLocation());
+            }
+
+            lastGhostLocation = marker.getLocation();
+        }
+    }
+
+    private void drawGhostLine(Location from, Location to){
+        googleMap.addPolyline(new PolylineOptions()
+                .add(toLatLng(from), toLatLng(to))
+                .width(MAP_LINE_WIDTH)
+                .color(Color.GRAY));
     }
 
     private LatLng toLatLng(Location location) {
