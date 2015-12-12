@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.List;
 
+import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
 import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.Ghost;
@@ -64,26 +65,9 @@ public class MapActivity extends AppCompatActivity implements
                 @Override
                 public void run() {
                     chronometerText.setText(course.getFormattedElapsedTime());
-
-                    int distance = course.getDistanceInMeters();
-                    StringBuilder distanceBuilder = new StringBuilder();
-                    // TODO virgule vs. point (anglais et français)
-                    if (distance < 1000) {
-                        distanceBuilder.append("0,");
-                        if (distance < 100)
-                            distanceBuilder.append("0");
-                        if (distance < 10)
-                            distanceBuilder.append("0");
-                        distanceBuilder.append(distance);
-                    } else {
-                        distanceBuilder.append(distance).insert(distanceBuilder.length() - 3, ",");
-                    }
-                    distanceText.setText(distanceBuilder.toString());
-
+                    distanceText.setText(Formatting.formatDistance(course.getDistanceInMeters()));
                     calorieText.setText(String.valueOf(course.getCalories()));
-
                     stepText.setText(String.valueOf(course.getNbCountedSteps()));
-
                     drawGhostPath(ghost.getNextMarkersAt(course.getElapsedSeconds()));
                 }
             });

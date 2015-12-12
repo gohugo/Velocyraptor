@@ -28,11 +28,13 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
 import ca.qc.bdeb.p55.velocyraptor.common.view.ArrayAdapterDeCourse;
 import ca.qc.bdeb.p55.velocyraptor.common.view.SlidingTabLayout;
 import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
@@ -236,8 +238,10 @@ public class SlidingTabsBasicFragment extends Fragment {
             TextView stepsLabel = (TextView) view.findViewById(R.id.stats_lbl_nbsteps);
 
             nbRacesLabel.setText(getString(R.string.nbraces) + " " + db.getNumberRaces(typeCourse));
-            durationLabel.setText(getString(R.string.totalduration) + " " + db.getTotalDuration(typeCourse));
-            distanceLabel.setText(getString(R.string.totaldistance) + " " + db.getTotalDistance(typeCourse));
+            durationLabel.setText(getString(R.string.totalduration) + " "
+                    + Formatting.formatNiceDuration(db.getTotalDuration(typeCourse)));
+            distanceLabel.setText(getString(R.string.totaldistance) + " "
+                    + Formatting.formatDistance(db.getTotalDistance(typeCourse)));
             caloriesLabel.setText(getString(R.string.totalcalories) + " " + db.getTotalCalories(typeCourse));
 
             if(typeCourse == Course.TypeCourse.APIED) {
