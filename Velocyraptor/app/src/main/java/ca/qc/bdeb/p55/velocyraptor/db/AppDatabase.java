@@ -144,6 +144,46 @@ public class AppDatabase extends SQLiteOpenHelper {
         return markers;
     }
 
+    public int getNumberRaces(Course.TypeCourse typeCourse){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("select count(*) from " + TABLE_RACES
+                + " where " + TABLE_RACES_TYPE + " = ?", new String[]{String.valueOf(typeCourse.ordinal())});
+
+        cursor.moveToFirst();
+        int result = cursor.getInt(0);
+        db.close();
+
+        return result;
+    }
+
+    public int getTotalDuration(Course.TypeCourse typeCourse){
+        return getSumOfRaceColumn(TABLE_RACES_LENGTH, typeCourse);
+    }
+
+    public int getTotalDistance(Course.TypeCourse typeCourse){
+        return getSumOfRaceColumn(TABLE_RACES_DISTANCE, typeCourse);
+    }
+
+    public int getTotalCalories(Course.TypeCourse typeCourse){
+        return getSumOfRaceColumn(TABLE_RACES_CALORIES, typeCourse);
+    }
+
+    public int getTotalSteps(){
+        return getSumOfRaceColumn(TABLE_RACES_STEPS, Course.TypeCourse.APIED);
+    }
+
+    private int getSumOfRaceColumn(String column, Course.TypeCourse typeCourse){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("select sum(" + column + ") from " + TABLE_RACES
+                + " where " + TABLE_RACES_TYPE + " = ?", new String[]{String.valueOf(typeCourse.ordinal())});
+
+        cursor.moveToFirst();
+        int result = cursor.getInt(0);
+        db.close();
+
+        return result;
+    }
+
     public ArrayList<Course> getAllLastRaces(){
         ArrayList <Course>  lstCourses = new ArrayList<>();
 

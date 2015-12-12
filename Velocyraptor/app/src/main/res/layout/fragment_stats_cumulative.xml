@@ -11,7 +11,7 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"
+        android:id="@+id/stats_spin_racetype"
         android:entries="@array/race_types_stats"
         style="@style/Base.TextAppearance.AppCompat.Large" />
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Nombre de courses : 7"
-        android:id="@+id/textView"
+        android:id="@+id/stats_lbl_nbraces"
         android:layout_marginTop="10dp" />
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Durée totale : 8 h 32 min 7 s"
-        android:id="@+id/textView2"
+        android:id="@+id/stats_lbl_totalduration"
         android:layout_marginTop="10dp" />
 
     <TextView
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Distance totale : 182 km"
-        android:id="@+id/textView3"
+        android:id="@+id/stats_lbl_totaldistance"
         android:layout_marginTop="10dp" />
 
     <TextView
@@ -44,7 +44,15 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Calories totales : 8 906"
-        android:id="@+id/textView4"
+        android:id="@+id/stats_lbl_totalcalories"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Calories totales : 8 906"
+        android:id="@+id/stats_lbl_nbsteps"
         android:layout_marginTop="10dp" />
 
 </LinearLayout>

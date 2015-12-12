@@ -32,4 +32,11 @@
         <item>Courses à vélo</item>
         <item>Courses à pied</item>
     </array>
+
+    <!-- Statistiques cumulatives -->
+    <string name="nbraces">Nombre de courses :</string>
+    <string name="totalduration">Durée totale :</string>
+    <string name="totaldistance">Distance totale :</string>
+    <string name="totalcalories">Calories totales :</string>
+    <string name="totalsteps">Nombre de pas :</string>
 </resources>
