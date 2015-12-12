@@ -110,7 +110,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.insert(TABLE_RACES, null, values);
 
         String tableContainingThisRace = (course.getTypeCourse() == Course.TypeCourse.APIED
-                ? TABLE_LASTFOOTRACE : TABLE_LASTFOOTRACE);
+                ? TABLE_LASTFOOTRACE : TABLE_LASTBIKERACE);
         db.delete(tableContainingThisRace, null, null);
 
         for(RaceMarker marker : markers){
@@ -123,25 +123,23 @@ public class AppDatabase extends SQLiteOpenHelper {
 
         db.close();
     }
-//    public ArrayList<Course> getAllLastRaces(){
-//        ArrayList <Course>  lstCourses = new ArrayList<>();
-//
-//
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        String selectQuerry = "SELECT * FROM " + TABLE_RACES;
-//        Cursor cursor = db.rawQuery(selectQuerry, null);
-//
-//        if (cursor != null) {
-//            cursor.moveToFirst();
-//            do {
-//                String abc = cursor.getString(0);
-//
-//                lstCourses.add(new Client(Integer.parseInt(cursor.getString(0)),
-//                        cursor.getString(1), Integer.parseInt(cursor.getString(2)), Client.Genre.Rien,
-//                        cursor.getString(4), cursor.getString(5), cursor.getString(6)));
-//            } while (cursor.moveToNext());
-//        }
-//
-//        return lstCourses;
-//    }
+    public ArrayList<Course> getAllLastRaces(){
+        ArrayList <Course>  lstCourses = new ArrayList<>();
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuerry = "SELECT * FROM " + TABLE_RACES;
+        Cursor cursor = db.rawQuery(selectQuerry, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            do {
+                String abc = cursor.getString(0);
+
+                lstCourses.add(new Course();
+            } while (cursor.moveToNext());
+        }
+
+        return lstCourses;
+    }
 }
