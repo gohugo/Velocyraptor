@@ -137,12 +137,15 @@ public class MapActivity extends AppCompatActivity implements
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
-
             public void onClick(View v) {
                 course = new Course(Course.TypeCourse.APIED); // TODO choix type
                 course.setContext(getApplicationContext());
                 course.setOnChronometerTick(onChronometerTick);
                 course.demarrer();
+
+                if(lastLocation != null)
+                    moveUserToOnMap(lastLocation);
+
                 switchButtonsToState(Course.State.STARTED);
                 setMapControlsEnabled(false);
             }
@@ -328,7 +331,7 @@ public class MapActivity extends AppCompatActivity implements
     public void onLocationChanged(Location location) {
         if (!hasMovedOnceToUserLocation || course != null && course.getState() != Course.State.STOPPED
                 && (lastLocation == null || lastLocation.distanceTo(location) > 1)) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(location), 16));
+            moveUserToOnMap(location);
 
             if (course != null && course.getState() == Course.State.STARTED) {
                 course.addLocation(location);
@@ -337,6 +340,10 @@ public class MapActivity extends AppCompatActivity implements
 
             hasMovedOnceToUserLocation = true;
         }
+    }
+
+    private void moveUserToOnMap(Location to){
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(to), 16));
     }
 
     private void drawLineFromLastLocation(Location to) {
