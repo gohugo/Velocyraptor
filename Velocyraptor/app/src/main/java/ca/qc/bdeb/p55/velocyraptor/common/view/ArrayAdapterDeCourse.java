@@ -14,13 +14,14 @@ import java.util.ArrayList;
 
 import ca.qc.bdeb.p55.velocyraptor.R;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
+import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
 
 
-public class ArrayAdapterDeCourse extends ArrayAdapter<Course> {
+public class ArrayAdapterDeCourse extends ArrayAdapter<HistoriqueDeCourse> {
     Context context;
 
 
-    public ArrayAdapterDeCourse(Context context, int resource, ArrayList<Course> item) {
+    public ArrayAdapterDeCourse(Context context, int resource, ArrayList<HistoriqueDeCourse> item) {
         super(context, resource, item);
         this.context = context;
 
@@ -41,7 +42,7 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<Course> {
 
         CourseHistoryHolder holder = null;
         Button button = null;
-        final Course rowItem = getItem(position);
+        final HistoriqueDeCourse rowItem = getItem(position);
 
         LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {

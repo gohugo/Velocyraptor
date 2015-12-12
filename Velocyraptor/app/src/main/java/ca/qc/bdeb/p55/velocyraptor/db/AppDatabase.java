@@ -3,6 +3,7 @@ package ca.qc.bdeb.p55.velocyraptor.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
+import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
 import ca.qc.bdeb.p55.velocyraptor.model.RaceMarker;
 
 /**
@@ -94,18 +96,19 @@ public class AppDatabase extends SQLiteOpenHelper {
     /**
      * Ajoute une course terminée et définit son chemin comme celui de la dernière course effectuée.
      *
-     * @param markers    Endroits où l'utilisateur est passé.
-     * @param course     Course.
+     * @param markers Endroits où l'utilisateur est passé.
+     * @param course  Course.
      */
     public void addRace(List<RaceMarker> markers, Course course) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        int bob = course.getTypeCourse().ordinal();
         values.put(TABLE_RACES_TYPE, course.getTypeCourse().ordinal());
         values.put(TABLE_RACES_LENGTH, course.getElapsedSeconds());
         values.put(TABLE_RACES_DISTANCE, course.getDistanceInMeters());
         values.put(TABLE_RACES_CALORIES, course.getCalories());
-        if(course.getTypeCourse() == Course.TypeCourse.APIED)
+        if (course.getTypeCourse() == Course.TypeCourse.APIED)
             values.put(TABLE_RACES_STEPS, course.getNbCountedSteps());
         db.insert(TABLE_RACES, null, values);
 
@@ -113,7 +116,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                 ? TABLE_LASTFOOTRACE : TABLE_LASTBIKERACE);
         db.delete(tableContainingThisRace, null, null);
 
-        for(RaceMarker marker : markers){
+        for (RaceMarker marker : markers) {
             values = new ContentValues();
             values.put(TABLE_RACE_SECONDSFROMSTART, marker.getSecondsFromStart());
             values.put(TABLE_RACE_LONGITUDE, marker.getLocation().getLongitude());
@@ -123,23 +126,29 @@ public class AppDatabase extends SQLiteOpenHelper {
 
         db.close();
     }
-    public ArrayList<Course> getAllLastRaces(){
-        ArrayList <Course>  lstCourses = new ArrayList<>();
+
+    public ArrayList<HistoriqueDeCourse> getAllLastRaces() {
+        ArrayList<HistoriqueDeCourse> lstCourses = new ArrayList<>();
 
 
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuerry = "SELECT * FROM " + TABLE_RACES;
         Cursor cursor = db.rawQuery(selectQuerry, null);
+        try {
+            if (cursor != null) {
+                cursor.moveToFirst();
 
-        if (cursor != null) {
-            cursor.moveToFirst();
-            do {
-                String abc = cursor.getString(0);
+                do {
+                    String abc = cursor.getString(0);
 
-                lstCourses.add(new Course();
-            } while (cursor.moveToNext());
+                    lstCourses.add(new HistoriqueDeCourse(cursor.getInt(1) == 0 ? Course.TypeCourse.APIED : Course.TypeCourse.VELO,cursor.getLong(2),cursor.getInt(2),cursor.getInt(2),cursor.getInt(2)));
+                } while (cursor.moveToNext());
+            }
+
+
+        } catch (CursorIndexOutOfBoundsException e) {
+            lstCourses = null;
         }
-
         return lstCourses;
     }
 }

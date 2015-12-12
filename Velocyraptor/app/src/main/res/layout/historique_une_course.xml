@@ -3,13 +3,27 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Nom Course"
-        android:id="@+id/historiquecourse_lbl_nomCourse"
-        android:layout_gravity="center" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Type de course:"
+            android:id="@+id/historiquecourse_lbl_type"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/historiquecourse_lbl_typevalue"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -26,9 +40,52 @@
 
         <TextView
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/historiquecourse_lbl_datevalue"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Type de course:"
-            android:id="@+id/historiquecourse_lbl_type"
+            android:text="Temps:"
+
+            android:id="@+id/historiquecourse_lbl_temp"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView5historiquecourse_lbl_tempvalue"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Distance:"
+            android:id="@+id/historiquecourse_lbl_distance"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7historiquecourse_lbl_distancevalue"
             android:layout_weight="1"
             android:gravity="center" />
     </LinearLayout>
@@ -41,17 +98,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Temp:"
-
-            android:id="@+id/historiquecourse_lbl_temp"
+            android:text="Calorie:"
+            android:id="@+id/historiquecourse_lbl_calorie"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"
+            android:singleLine="false" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Distance:"
-            android:id="@+id/historiquecourse_lbl_distance"
+            android:id="@+id/historiquecourse_lbl_distancevalue"
             android:layout_weight="1"
             android:gravity="center" />
     </LinearLayout>

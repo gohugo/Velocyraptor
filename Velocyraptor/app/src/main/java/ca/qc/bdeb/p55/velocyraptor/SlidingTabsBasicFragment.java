@@ -31,7 +31,9 @@ import java.util.Locale;
 
 import ca.qc.bdeb.p55.velocyraptor.common.view.ArrayAdapterDeCourse;
 import ca.qc.bdeb.p55.velocyraptor.common.view.SlidingTabLayout;
+import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
+import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
 
 /**
  * A basic sample which shows how to use {@link ca.qc.bdeb.p55.velocyraptor.common.view.SlidingTabLayout}
@@ -144,6 +146,7 @@ public class SlidingTabsBasicFragment extends Fragment {
          * Instantiate the {@link View} which should be displayed at {@code position}. Here we
          * inflate a layout from the apps resources and then change the text view to signify the position.
          */
+
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             View view = null;
@@ -164,20 +167,12 @@ public class SlidingTabsBasicFragment extends Fragment {
                     container.addView(view);
 
                     ListView listView = (ListView) view.findViewById(R.id.historiquecourse_lstview);
-                    ArrayList<Course> lstCourse = new ArrayList<>();
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-                    lstCourse.add(new Course(Course.TypeCourse.APIED));
-
-                    ArrayAdapterDeCourse adapterDeCourse = new ArrayAdapterDeCourse(getActivity(), R.layout.historique_une_course, lstCourse);
-                    listView.setAdapter(adapterDeCourse);
-
+                    ArrayList<HistoriqueDeCourse> lstCourse = new ArrayList<>();
+                    lstCourse = AppDatabase.getInstance().getAllLastRaces();
+                    if (lstCourse != null) {
+                        ArrayAdapterDeCourse adapterDeCourse = new ArrayAdapterDeCourse(getActivity(), R.layout.historique_une_course, lstCourse);
+                        listView.setAdapter(adapterDeCourse);
+                    }
                     break;
 
                 case 2:
