@@ -20,6 +20,13 @@ public class RaceMarker implements Serializable {
         location = p_location;
     }
 
+    public RaceMarker(int seconds, double longitude, double latitude){
+        secondsFromStart = seconds;
+        location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+    }
+
     public int getSecondsFromStart(){
         return secondsFromStart;
     }

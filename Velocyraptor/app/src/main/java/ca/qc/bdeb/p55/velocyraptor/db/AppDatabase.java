@@ -74,22 +74,18 @@ public class AppDatabase extends SQLiteOpenHelper {
                 COL_ID + " integer primary key autoincrement," +
                 TABLE_ACHIEVEMENTS_REACHED + " tinyint not null default 0" +
                 ")");
-        db.execSQL("create table " + TABLE_LASTFOOTRACE + " (" +
-                TABLE_RACE_SECONDSFROMSTART + " real not null," +
-                TABLE_RACE_LONGITUDE + " real not null," +
-                TABLE_RACE_LATITUDE + " real not null" +
-                ")");
-        db.execSQL("create table " + TABLE_LASTBIKERACE + " (" +
-                TABLE_RACE_SECONDSFROMSTART + " real not null," +
-                TABLE_RACE_LONGITUDE + " real not null," +
-                TABLE_RACE_LATITUDE + " real not null" +
-                ")");
+
+        for(String tableName : new String[] {TABLE_LASTFOOTRACE, TABLE_LASTBIKERACE}) {
+            db.execSQL("create table " + tableName + " (" +
+                    TABLE_RACE_SECONDSFROMSTART + " integer not null," +
+                    TABLE_RACE_LONGITUDE + " real not null," +
+                    TABLE_RACE_LATITUDE + " real not null" +
+                    ")");
+        }
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
     /**
      * Ajoute une course terminée et définit son chemin comme celui de la dernière course effectuée.
@@ -109,8 +105,7 @@ public class AppDatabase extends SQLiteOpenHelper {
             values.put(TABLE_RACES_STEPS, course.getNbCountedSteps());
         db.insert(TABLE_RACES, null, values);
 
-        String tableContainingThisRace = (course.getTypeCourse() == Course.TypeCourse.APIED
-                ? TABLE_LASTFOOTRACE : TABLE_LASTBIKERACE);
+        String tableContainingThisRace = getRaceTableFromType(course.getTypeCourse());
         db.delete(tableContainingThisRace, null, null);
 
         for(RaceMarker marker : markers){
@@ -123,6 +118,32 @@ public class AppDatabase extends SQLiteOpenHelper {
 
         db.close();
     }
+
+    /**
+     * Retourne tous les marqueurs de la dernière course d'un type.
+     * @param typeCourse Type de la dernière course.
+     * @return Marqueurs de cette course.
+     */
+    public List<RaceMarker> getMarkersOf(Course.TypeCourse typeCourse){
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<RaceMarker> markers = new ArrayList<>();
+
+        Cursor cursor = db.query(getRaceTableFromType(typeCourse), null, null, null, null, null, null);
+
+        if(cursor != null && cursor.moveToFirst()){
+            do {
+                int secondsFromStart = cursor.getInt(cursor.getColumnIndex(TABLE_RACE_SECONDSFROMSTART));
+                double longitude = cursor.getDouble(cursor.getColumnIndex(TABLE_RACE_LONGITUDE));
+                double latitude = cursor.getDouble(cursor.getColumnIndex(TABLE_RACE_LATITUDE));
+                markers.add(new RaceMarker(secondsFromStart, longitude, latitude));
+            } while(cursor.moveToNext());
+        }
+
+        db.close();
+
+        return markers;
+    }
+
     public ArrayList<Course> getAllLastRaces(){
         ArrayList <Course>  lstCourses = new ArrayList<>();
 
@@ -141,5 +162,9 @@ public class AppDatabase extends SQLiteOpenHelper {
         }
 
         return lstCourses;
+    }
+
+    private String getRaceTableFromType(Course.TypeCourse typeCourse){
+        return typeCourse == Course.TypeCourse.APIED ? TABLE_LASTFOOTRACE : TABLE_LASTBIKERACE;
     }
 }
