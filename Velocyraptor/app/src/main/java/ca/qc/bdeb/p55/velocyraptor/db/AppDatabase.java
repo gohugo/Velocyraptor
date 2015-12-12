@@ -195,7 +195,7 @@ public class AppDatabase extends SQLiteOpenHelper {
 
 
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuerry = "SELECT * FROM " + TABLE_RACES;
+        String selectQuerry = "SELECT * FROM " + TABLE_RACES +" order by " + COL_ID+" DESC";
         Cursor cursor = db.rawQuery(selectQuerry, null);
         try {
             if (cursor != null) {
