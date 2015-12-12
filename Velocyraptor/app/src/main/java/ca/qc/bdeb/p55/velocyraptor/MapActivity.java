@@ -20,6 +20,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -36,7 +37,6 @@ public class MapActivity extends AppCompatActivity implements
         LocationListener {
 
     private static final String KEY_USER_RACE = "userrace";
-    private static final String KEY_NB_STEPS = "nbsteps";
 
     private GoogleMap googleMap;
     private TextView chronometerText;
@@ -83,6 +83,9 @@ public class MapActivity extends AppCompatActivity implements
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
 
+    /** Vrai si un zoom s'est fait à l'emplacement de l'utilisateur au moins une fois. */
+    private boolean hasMovedOnceToUserLocation = false;
+
     private Course course;
     private Location lastLocation;
 
@@ -91,7 +94,6 @@ public class MapActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         AppDatabase.setApplicationContext(getApplicationContext());
         setContentView(R.layout.activity_map);
-        setUpMapIfNeeded();
 
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         chronometerText = (TextView) findViewById(R.id.mapactivity_txt_chronometer);
@@ -138,6 +140,7 @@ public class MapActivity extends AppCompatActivity implements
                 course.setOnChronometerTick(onChronometerTick);
                 course.demarrer();
                 switchButtonsToState(Course.State.STARTED);
+                setMapControlsEnabled(false);
             }
         });
 
@@ -146,6 +149,7 @@ public class MapActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 course.interrompre();
                 switchButtonsToState(Course.State.PAUSED);
+                setMapControlsEnabled(false);
             }
         });
 
@@ -154,6 +158,7 @@ public class MapActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 course.demarrer();
                 switchButtonsToState(Course.State.STARTED);
+                setMapControlsEnabled(false);
             }
         });
 
@@ -162,6 +167,7 @@ public class MapActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 course.endRaceAndSave();
                 switchButtonsToState(Course.State.STOPPED);
+                setMapControlsEnabled(true);
             }
         });
     }
@@ -187,6 +193,12 @@ public class MapActivity extends AppCompatActivity implements
                 btnStop.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    private void setMapControlsEnabled(boolean areEnabled){
+        UiSettings settings = googleMap.getUiSettings();
+        settings.setZoomControlsEnabled(areEnabled);
+        settings.setAllGesturesEnabled(areEnabled);
     }
 
     @Override
@@ -308,13 +320,16 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
-        if (lastLocation == null || lastLocation.distanceTo(location) > 1) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(location), 15));
+        if (!hasMovedOnceToUserLocation || course != null && course.getState() != Course.State.STOPPED
+                && (lastLocation == null || lastLocation.distanceTo(location) > 1)) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(location), 16));
 
             if(course != null && course.getState() == Course.State.STARTED) {
                 course.addLocation(location);
                 drawLineFromLastLocation(location);
             }
+
+            hasMovedOnceToUserLocation = true;
         }
     }
 
