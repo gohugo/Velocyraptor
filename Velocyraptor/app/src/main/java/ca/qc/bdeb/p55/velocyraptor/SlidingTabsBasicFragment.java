@@ -28,7 +28,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -234,7 +233,7 @@ public class SlidingTabsBasicFragment extends Fragment {
 
             nbRacesLabel.setText(getString(R.string.nbraces) + " " + db.getNumberRaces(typeCourse));
             durationLabel.setText(getString(R.string.totalduration) + " "
-                    + Formatting.formatNiceDuration(db.getTotalDuration(typeCourse)));
+                    + Formatting.formatNiceDuration(db.getTotalDurationInSeconds(typeCourse)));
             distanceLabel.setText(getString(R.string.totaldistance) + " "
                     + Formatting.formatDistance(db.getTotalDistance(typeCourse)));
             caloriesLabel.setText(getString(R.string.totalcalories) + " " + db.getTotalCalories(typeCourse));

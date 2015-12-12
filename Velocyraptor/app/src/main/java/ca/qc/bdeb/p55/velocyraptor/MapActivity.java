@@ -47,7 +47,7 @@ public class MapActivity extends AppCompatActivity implements
     private static final int MAP_LINE_WIDTH = 3;
 
     private GoogleMap googleMap;
-    public static TextView chronometerText;
+    public TextView chronometerText;
     private TextView distanceText;
     private TextView calorieText;
     private TextView stepText;
@@ -64,7 +64,7 @@ public class MapActivity extends AppCompatActivity implements
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    chronometerText.setText(course.getFormattedElapsedTime());
+                    updateDuration();
                     distanceText.setText(Formatting.formatDistance(course.getDistanceInMeters()));
                     calorieText.setText(String.valueOf(course.getCalories()));
                     stepText.setText(String.valueOf(course.getNbCountedSteps()));
@@ -118,7 +118,7 @@ public class MapActivity extends AppCompatActivity implements
                 course = (Course) savedRace;
                 ghost = (Ghost) savedInstanceState.getSerializable(KEY_GHOST);
                 switchButtonsToCurrentRaceState();
-                chronometerText.setText(course.getFormattedElapsedTime());
+                updateDuration();
             }
         }
     }
@@ -150,6 +150,7 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 course.interrompre();
+                updateDuration();
                 switchButtonsToCurrentRaceState();
                 setMapControlsEnabled(false);
             }
@@ -168,6 +169,7 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 course.endRaceAndSave();
+                updateDuration();
                 switchButtonsToCurrentRaceState();
                 setMapControlsEnabled(true);
             }
@@ -201,6 +203,10 @@ public class MapActivity extends AppCompatActivity implements
         UiSettings settings = googleMap.getUiSettings();
         settings.setZoomControlsEnabled(areEnabled);
         settings.setAllGesturesEnabled(areEnabled);
+    }
+
+    private void updateDuration(){
+        chronometerText.setText(Formatting.formatExactDuration(course.getElapsedMilliseconds()));
     }
 
     @Override
@@ -372,12 +378,5 @@ public class MapActivity extends AppCompatActivity implements
 
     private LatLng toLatLng(Location location) {
         return new LatLng(location.getLatitude(), location.getLongitude());
-    }
-
-
-
-    public static  String getDisplayedTime(){
-        return chronometerText.getText().toString();
-
     }
 }

@@ -1,5 +1,7 @@
 package ca.qc.bdeb.p55.velocyraptor.common;
 
+import java.text.DecimalFormat;
+
 /**
  * Méthodes qui permettent de formater des valeurs en chaîne de caractères.
  */
@@ -50,5 +52,34 @@ public final class Formatting {
             return days + " days, " + hours + " h " + minutes + " min " + seconds + " s";
 
         return hours + " h " + minutes + " min " + seconds + " s";
+    }
+
+    public static String formatExactDuration(int milliseconds){
+        DecimalFormat df = new DecimalFormat("00");
+        StringBuilder builder = new StringBuilder();
+
+        int hours = milliseconds / (3600 * 1000);
+        int remaining = milliseconds % (3600 * 1000);
+
+        int minutes = remaining / (60 * 1000);
+        remaining = remaining % (60 * 1000);
+
+        int seconds = remaining / 1000;
+        remaining = remaining % 1000;
+
+        int hundredths = remaining / 10;
+
+        if (hours > 0) {
+            builder.append(df.format(hours))
+                    .append(":");
+        }
+
+        builder.append(df.format(minutes))
+                .append(":")
+                .append(df.format(seconds))
+                .append(".")
+                .append(df.format(hundredths));
+
+        return builder.toString();
     }
 }
