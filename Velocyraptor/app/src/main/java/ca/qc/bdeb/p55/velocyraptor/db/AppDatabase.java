@@ -2,9 +2,12 @@ package ca.qc.bdeb.p55.velocyraptor.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
@@ -120,4 +123,25 @@ public class AppDatabase extends SQLiteOpenHelper {
 
         db.close();
     }
+//    public ArrayList<Course> getAllLastRaces(){
+//        ArrayList <Course>  lstCourses = new ArrayList<>();
+//
+//
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        String selectQuerry = "SELECT * FROM " + TABLE_RACES;
+//        Cursor cursor = db.rawQuery(selectQuerry, null);
+//
+//        if (cursor != null) {
+//            cursor.moveToFirst();
+//            do {
+//                String abc = cursor.getString(0);
+//
+//                lstCourses.add(new Client(Integer.parseInt(cursor.getString(0)),
+//                        cursor.getString(1), Integer.parseInt(cursor.getString(2)), Client.Genre.Rien,
+//                        cursor.getString(4), cursor.getString(5), cursor.getString(6)));
+//            } while (cursor.moveToNext());
+//        }
+//
+//        return lstCourses;
+//    }
 }
