@@ -136,7 +136,7 @@ public class AppDatabase extends SQLiteOpenHelper {
             do {
                 String abc = cursor.getString(0);
 
-                lstCourses.add(new Course();
+                lstCourses.add(new Course(Course.TypeCourse.AUCUN)); // FIXME type de course
             } while (cursor.moveToNext());
         }
 
