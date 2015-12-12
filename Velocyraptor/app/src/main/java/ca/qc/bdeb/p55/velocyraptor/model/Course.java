@@ -122,13 +122,14 @@ public class Course implements Serializable {
         AppDatabase.getInstance().addRace(userPath, this);
     }
 
-    public  enum TypeCourse {
+    public enum TypeCourse {
 
-         APIED ,  VELO,  AUCUN
+        APIED, VELO, AUCUN
     }
 
 
     public enum State {
         STARTED, PAUSED, STOPPED
     }
+
 }

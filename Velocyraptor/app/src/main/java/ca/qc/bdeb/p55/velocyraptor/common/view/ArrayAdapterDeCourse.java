@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import ca.qc.bdeb.p55.velocyraptor.R;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
+import ca.qc.bdeb.p55.velocyraptor.model.CustomChronometer;
 import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
 
 
@@ -29,10 +30,12 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<HistoriqueDeCourse> {
     }
 
     private class CourseHistoryHolder {
-        TextView txtNom;
-        TextView txtAge;
-        TextView txtAddresse;
-
+        TextView lblDate;
+        TextView lblTypedeCourse;
+        TextView lblTemps;
+        TextView lblDistance;
+        TextView lblCalorie;
+        TextView lblNbStep;
 
 
     }
@@ -51,10 +54,17 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<HistoriqueDeCourse> {
             holder = new CourseHistoryHolder();
             //ici initialiser les component de la listview
 //            holder.txtNom = (TextView) convertView.findViewById(R.id.unclient_lbl_nom);
+            holder.lblDate = (TextView) convertView.findViewById(R.id.historiquecourse_lbl_datevalue);
+            holder.lblTypedeCourse = (TextView) convertView.findViewById(R.id.historiquecourse_lbl_typevalue);
+            holder.lblTemps = (TextView) convertView.findViewById(R.id.textView5historiquecourse_lbl_tempvalue);
+            holder.lblDistance = (TextView) convertView.findViewById(R.id.historiquecourse_lbl_distancevalue);
+            holder.lblCalorie = (TextView) convertView.findViewById(R.id.historiquecourse_lbl_calorievalue);
 
 
-
-
+            holder.lblTypedeCourse.setText(rowItem.getTypeCourse().toString());
+            holder.lblTemps.setText(rowItem.getTime());
+            holder.lblDistance.setText(Integer.toString(rowItem.getTotalDistance()));
+            holder.lblCalorie.setText(Integer.toString(rowItem.getNbCalorieBurn()));
             convertView.setTag(holder);
         } else {
             holder = (CourseHistoryHolder) convertView.getTag();

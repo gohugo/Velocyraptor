@@ -85,7 +85,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView7historiquecourse_lbl_distancevalue"
+            android:id="@+id/historiquecourse_lbl_distancevalue"
             android:layout_weight="1"
             android:gravity="center" />
     </LinearLayout>
@@ -107,7 +107,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/historiquecourse_lbl_distancevalue"
+            android:id="@+id/historiquecourse_lbl_calorievalue"
             android:layout_weight="1"
             android:gravity="center" />
     </LinearLayout>

@@ -67,7 +67,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_RACES + " (" +
                 COL_ID + " integer primary key autoincrement," +
                 TABLE_RACES_TYPE + " integer not null," +
-                TABLE_RACES_LENGTH + " integer not null," +
+                TABLE_RACES_LENGTH + " text not null," +
                 TABLE_RACES_DISTANCE + " integer not null," +
                 TABLE_RACES_CALORIES + " integer not null," +
                 TABLE_RACES_STEPS + " integer" +
@@ -102,7 +102,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         int bob = course.getTypeCourse().ordinal();
         values.put(TABLE_RACES_TYPE, course.getTypeCourse().ordinal());
-        values.put(TABLE_RACES_LENGTH, course.getElapsedSeconds());
+        values.put(TABLE_RACES_LENGTH, course.getFormattedElapsedTime());
         values.put(TABLE_RACES_DISTANCE, course.getDistanceInMeters());
         values.put(TABLE_RACES_CALORIES, course.getCalories());
         if (course.getTypeCourse() == Course.TypeCourse.APIED)
@@ -202,7 +202,7 @@ public class AppDatabase extends SQLiteOpenHelper {
 
                 do {
                     String abc = cursor.getString(0);
-                    lstCourses.add(new HistoriqueDeCourse(cursor.getInt(1) == 0 ? Course.TypeCourse.APIED : Course.TypeCourse.VELO, cursor.getLong(2), cursor.getInt(2), cursor.getInt(2), cursor.getInt(2)));
+                    lstCourses.add(new HistoriqueDeCourse(cursor.getInt(1) == 0 ? Course.TypeCourse.APIED : Course.TypeCourse.VELO, cursor.getString(2), cursor.getInt(3), cursor.getInt(4), cursor.getInt(5)));
                 } while (cursor.moveToNext());
             }
 

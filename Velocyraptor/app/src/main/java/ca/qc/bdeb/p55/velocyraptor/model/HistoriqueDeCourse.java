@@ -5,21 +5,14 @@ package ca.qc.bdeb.p55.velocyraptor.model;
  */
 public class HistoriqueDeCourse {
     private Course.TypeCourse typeCourse;
-    private long time;
+    private String time;
     private long date;
     private int totalDistance;
     private int nbStep;
     private int nbCalorieBurn;
 
-    public HistoriqueDeCourse(Course.TypeCourse typeCourse, long time, long date, int nbStep, int totalDistance, int nbCalorieBurn) {
-        this.typeCourse = typeCourse;
-        this.time = time;
-        this.date = date;
-        this.nbStep = nbStep;
-        this.totalDistance = totalDistance;
-        this.nbCalorieBurn = nbCalorieBurn;
-    }
-    public HistoriqueDeCourse(Course.TypeCourse typeCourse,long time,  int totalDistance, int nbCalorieBurn,int nbStep) {
+
+    public HistoriqueDeCourse(Course.TypeCourse typeCourse,String time,  int totalDistance, int nbCalorieBurn,int nbStep) {
         this.typeCourse = typeCourse;
         this.time = time;
         this.nbStep = nbStep;
@@ -45,11 +38,11 @@ public class HistoriqueDeCourse {
         this.typeCourse = typeCourse;
     }
 
-    public long getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

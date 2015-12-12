@@ -174,6 +174,7 @@ public class SlidingTabsBasicFragment extends Fragment {
                     container.addView(view);
                     break;
                 case 1:
+
                     view = getActivity().getLayoutInflater().inflate(R.layout.fragment_historique,
                             container, false);
                     // Add the newly created View to the ViewPager
