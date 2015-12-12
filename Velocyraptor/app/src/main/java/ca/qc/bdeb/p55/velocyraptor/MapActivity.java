@@ -1,5 +1,7 @@
 package ca.qc.bdeb.p55.velocyraptor;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -48,6 +50,7 @@ public class MapActivity extends AppCompatActivity implements
     private Button btnStop;
     private Button btnResume;
     private Button btnPause;
+    private Course.TypeCourse typeCourseSelectionner = Course.TypeCourse.AUCUN;
 
     private final Runnable onChronometerTick = new Runnable() {
         @Override
@@ -60,11 +63,11 @@ public class MapActivity extends AppCompatActivity implements
                     int distance = course.getDistanceInMeters();
                     StringBuilder distanceBuilder = new StringBuilder();
                     // TODO virgule vs. point (anglais et français)
-                    if(distance < 1000) {
+                    if (distance < 1000) {
                         distanceBuilder.append("0,");
-                        if(distance < 100)
+                        if (distance < 100)
                             distanceBuilder.append("0");
-                        if(distance < 10)
+                        if (distance < 10)
                             distanceBuilder.append("0");
                         distanceBuilder.append(distance);
                     } else {
@@ -118,7 +121,7 @@ public class MapActivity extends AppCompatActivity implements
 
         if (savedInstanceState != null) {
             Object savedRace = savedInstanceState.getSerializable(KEY_USER_RACE);
-            if(savedRace != null) {
+            if (savedRace != null) {
                 course = (Course) savedRace;
                 switchButtonsToState(course.getState());
                 chronometerText.setText(course.getFormattedElapsedTime());
@@ -134,8 +137,9 @@ public class MapActivity extends AppCompatActivity implements
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View v) {
-                course = new Course(Course.TypeCourse.PIED); // TODO choix type
+                course = new Course(Course.TypeCourse.APIED); // TODO choix type
                 course.setContext(getApplicationContext());
                 course.setOnChronometerTick(onChronometerTick);
                 course.demarrer();
@@ -172,7 +176,7 @@ public class MapActivity extends AppCompatActivity implements
         });
     }
 
-    private void switchButtonsToState(Course.State state){
+    private void switchButtonsToState(Course.State state) {
         switch (course.getState()) {
             case STARTED:
                 btnStart.setVisibility(View.GONE);
@@ -212,13 +216,13 @@ public class MapActivity extends AppCompatActivity implements
         super.onResume();
         setUpMapIfNeeded();
 
-        if(course != null) {
+        if (course != null) {
             course.setOnChronometerTick(onChronometerTick);
         }
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
     }
 
@@ -226,7 +230,7 @@ public class MapActivity extends AppCompatActivity implements
     protected void onStop() {
         googleApiClient.disconnect();
 
-        if(course != null)
+        if (course != null)
             course.removeOnChronometerTick();
 
         super.onStop();
@@ -234,7 +238,9 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if(course != null) {
+
+        if (course != null) {
+
             outState.putSerializable(KEY_USER_RACE, course);
         }
     }
@@ -263,11 +269,11 @@ public class MapActivity extends AppCompatActivity implements
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
      * call {@link #setUpMap()} once when {@link #googleMap} is not null.
-     * <p/>
+     * <p>
      * If it isn't installed {@link SupportMapFragment} (and
      * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
      * install/update the Google Play services APK on their device.
-     * <p/>
+     * <p>
      * A user can return to this FragmentActivity after following the prompt and correctly
      * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
      * have been completely destroyed during this process (it is likely that it would only be
@@ -290,7 +296,7 @@ public class MapActivity extends AppCompatActivity implements
 
     /**
      * This is where we can add markers or lines, add listeners or move the camera.
-     * <p/>
+     * <p>
      * This should only be called once and when we are sure that {@link #googleMap} is not null.
      */
     private void setUpMap() {
@@ -324,7 +330,7 @@ public class MapActivity extends AppCompatActivity implements
                 && (lastLocation == null || lastLocation.distanceTo(location) > 1)) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(location), 16));
 
-            if(course != null && course.getState() == Course.State.STARTED) {
+            if (course != null && course.getState() == Course.State.STARTED) {
                 course.addLocation(location);
                 drawLineFromLastLocation(location);
             }

@@ -35,7 +35,7 @@ public class Course implements Serializable {
         stepCounter = new CustomStepCounter();
     }
 
-    public void setContext(Context context){
+    public void setContext(Context context) {
         stepCounter.setContext(context);
     }
 
@@ -47,33 +47,33 @@ public class Course implements Serializable {
         return state;
     }
 
-    public void interrompre(){
+    public void interrompre() {
         state = State.PAUSED;
         chronometer.stop();
 
-        if(typeCourse == TypeCourse.PIED)
+        if (typeCourse == TypeCourse.APIED)
             stepCounter.stop();
     }
 
-    public void demarrer(){
+    public void demarrer() {
         state = State.STARTED;
         chronometer.start();
 
-        if(typeCourse == TypeCourse.PIED)
+        if (typeCourse == TypeCourse.APIED)
             stepCounter.start();
     }
 
-    public List<Location> getPath(){
+    public List<Location> getPath() {
         ArrayList<Location> locations = new ArrayList<>();
 
-        for(RaceMarker marker : userPath)
+        for (RaceMarker marker : userPath)
             locations.add(marker.getLocation());
 
         return locations;
     }
 
-    public void addLocation(Location location){
-        if(userPath.size() > 0) {
+    public void addLocation(Location location) {
+        if (userPath.size() > 0) {
             Location lastLocation = userPath.get(userPath.size() - 1).getLocation();
             distance += lastLocation.distanceTo(location);
         }
@@ -81,50 +81,52 @@ public class Course implements Serializable {
         userPath.add(new RaceMarker(chronometer.getElapsedSeconds(), location));
     }
 
-    public String getFormattedElapsedTime(){
+    public String getFormattedElapsedTime() {
         return chronometer.toString();
     }
 
-    public int getElapsedSeconds(){
+    public int getElapsedSeconds() {
         return chronometer.getElapsedSeconds();
     }
 
-    public int getDistanceInMeters(){
+    public int getDistanceInMeters() {
         return (int) Math.round(distance);
     }
 
-    public int getCalories(){
-        return (int) Math.round(distance * (typeCourse == TypeCourse.PIED
+    public int getCalories() {
+        return (int) Math.round(distance * (typeCourse == TypeCourse.APIED
                 ? CALORIES_PER_RUN_METER : CALORIES_PER_BIKE_METER));
     }
 
-    public int getNbCountedSteps(){
-        if(stepCounter.getNbCountedSteps() == -1)
+    public int getNbCountedSteps() {
+        if (stepCounter.getNbCountedSteps() == -1)
             return (int) Math.round(distance / AVERAGE_STEP_LENGTH);
 
         return stepCounter.getNbCountedSteps();
     }
 
-    public void setOnChronometerTick(Runnable callback){
+    public void setOnChronometerTick(Runnable callback) {
         chronometer.setOnTickCallback(callback);
     }
 
-    public void removeOnChronometerTick(){
+    public void removeOnChronometerTick() {
         chronometer.removeOnTickCallback();
     }
 
     /**
      * Enregistre cette course dans la BDD.
      */
-    public void endRaceAndSave(){
+    public void endRaceAndSave() {
         chronometer.stop();
         state = State.STOPPED;
         AppDatabase.getInstance().addRace(userPath, this);
     }
 
     public enum TypeCourse {
-        PIED, VELO
+
+        APIED, VELO, AUCUN
     }
+
 
     public enum State {
         STARTED, PAUSED, STOPPED

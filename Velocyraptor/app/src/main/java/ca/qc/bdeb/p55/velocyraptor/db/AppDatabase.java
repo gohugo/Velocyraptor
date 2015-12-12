@@ -2,9 +2,12 @@ package ca.qc.bdeb.p55.velocyraptor.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
@@ -56,6 +59,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         super(applicationContext, DB_NAME, null, DB_VERSION);
     }
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_RACES + " (" +
@@ -101,12 +105,12 @@ public class AppDatabase extends SQLiteOpenHelper {
         values.put(TABLE_RACES_LENGTH, course.getElapsedSeconds());
         values.put(TABLE_RACES_DISTANCE, course.getDistanceInMeters());
         values.put(TABLE_RACES_CALORIES, course.getCalories());
-        if(course.getTypeCourse() == Course.TypeCourse.PIED)
+        if(course.getTypeCourse() == Course.TypeCourse.APIED)
             values.put(TABLE_RACES_STEPS, course.getNbCountedSteps());
         db.insert(TABLE_RACES, null, values);
 
-        String tableContainingThisRace = (course.getTypeCourse() == Course.TypeCourse.PIED
-                ? TABLE_LASTFOOTRACE : TABLE_LASTFOOTRACE);
+        String tableContainingThisRace = (course.getTypeCourse() == Course.TypeCourse.APIED
+                ? TABLE_LASTFOOTRACE : TABLE_LASTBIKERACE);
         db.delete(tableContainingThisRace, null, null);
 
         for(RaceMarker marker : markers){
@@ -118,5 +122,24 @@ public class AppDatabase extends SQLiteOpenHelper {
         }
 
         db.close();
+    }
+    public ArrayList<Course> getAllLastRaces(){
+        ArrayList <Course>  lstCourses = new ArrayList<>();
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuerry = "SELECT * FROM " + TABLE_RACES;
+        Cursor cursor = db.rawQuery(selectQuerry, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            do {
+                String abc = cursor.getString(0);
+
+                lstCourses.add(new Course();
+            } while (cursor.moveToNext());
+        }
+
+        return lstCourses;
     }
 }
