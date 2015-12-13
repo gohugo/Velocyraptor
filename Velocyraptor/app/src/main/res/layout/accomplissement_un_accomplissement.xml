@@ -13,7 +13,17 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Large Text"
-            android:id="@+id/textView5"
+            android:id="@+id/accomplissement_lbl_description"
+            android:textAlignment="gravity"
+            android:gravity="center"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/accomplissement_lbl_reached"
             android:textAlignment="gravity"
             android:gravity="center"
             android:layout_weight="1" />
