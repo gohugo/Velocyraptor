@@ -88,6 +88,8 @@ public class AppDatabase extends SQLiteOpenHelper {
                     TABLE_RACE_LATITUDE + " real not null" +
                     ")");
         }
+
+        initialiserLesSuccesDeBase(db);
     }
 
     @Override
@@ -124,6 +126,15 @@ public class AppDatabase extends SQLiteOpenHelper {
         }
 
         db.close();
+    }
+
+    public void initAchievement(SQLiteDatabase db, Achievement achievement) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(TABLE_ACHIEVEMENTS_NAME, achievement.getName());
+        values.put(TABLE_ACHIEVEMENTS_REACHED, achievement.isReached());
+        db.insert(TABLE_ACHIEVEMENTS, null, values);
     }
 
     /**
@@ -255,6 +266,20 @@ public class AppDatabase extends SQLiteOpenHelper {
             lstAchievement = null;
         }
         return lstAchievement;
+    }
+
+    /*
+méthode qui initialise les succes de base de l"application et qui les sauvegardes dans la bd
+pour que l'on puisse sauvegader si il on été
+ */ public static ArrayList<Achievement> lstInitialAchievement;
+
+    private void initialiserLesSuccesDeBase(SQLiteDatabase db) {
+        lstInitialAchievement = new ArrayList<>();
+        lstInitialAchievement.add(new Achievement("burn1calorie", false));
+        lstInitialAchievement.add(new Achievement("complete_first_foot_race", false));
+        for (Achievement achievement : lstInitialAchievement) {
+            AppDatabase.getInstance().initAchievement(db, achievement);
+        }
     }
 
 

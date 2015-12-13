@@ -60,7 +60,7 @@ public class MapActivity extends AppCompatActivity implements
     private Button btnStop;
     private Button btnResume;
     private Button btnPause;
-    public static ArrayList<Achievement> lstInitialAchievement;
+
 
     private final Runnable onChronometerTick = new Runnable() {
         @Override
@@ -105,7 +105,7 @@ public class MapActivity extends AppCompatActivity implements
         stepText = (TextView) findViewById(R.id.mapactivity_lbl_rythmevalue);
 
         initialiserBoutons();
-        initialiserLesSuccesDeBase();
+
 
         setSupportActionBar(toolbar);
 
@@ -134,18 +134,8 @@ public class MapActivity extends AppCompatActivity implements
     }
 
 
-    /*
-    méthode qui initialise les succes de base de l"application et qui les sauvegardes dans la bd
-    pour que l'on puisse sauvegader si il on été
-     */
-    private void initialiserLesSuccesDeBase() {
-        lstInitialAchievement = new ArrayList<>();
-        lstInitialAchievement.add(new Achievement("burn1calorie", false));
-        lstInitialAchievement.add(new Achievement("complete_first_foot_race", false));
-        for (Achievement achievement : lstInitialAchievement) {
-            AppDatabase.getInstance().addAchievement(achievement);
-        }
-    }
+
+
 
     private void initialiserBoutons() {
         btnStart = (Button) findViewById(R.id.mapactivity_btn_start);
