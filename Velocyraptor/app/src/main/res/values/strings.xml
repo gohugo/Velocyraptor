@@ -33,4 +33,15 @@
     <!--message des succes atteint-->
     <string name="win_burn1calorie"> Vous avez brulé une calorie !</string>
     <string name="win_complete_first_foot_race"> Vous avez complété votre première course à pied!</string>
+
+    <!-- Partage sur les médias sociaux -->
+    <string name="share1">Avec l\'application Velocyraptor, j\'ai&#160;</string>
+    <string name="share_ran">couru</string>
+    <string name="share_cycled">pédalé</string>
+    <string name="share2">&#160;kilomètres en&#160;</string>
+    <string name="share3">&#160;minutes&#160;</string>
+    <string name="share4_opt">&#160;secondes&#160;</string>
+    <string name="share5">et dépensé&#160;</string>
+    <string name="share6">&#160;calories !</string>
+    <string name="no_race">Aucune course n\'a été débutée.</string>
 </resources>

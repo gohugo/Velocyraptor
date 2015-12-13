@@ -128,30 +128,16 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void initAchievement(SQLiteDatabase db, Achievement achievement) {
-
-        ContentValues values = new ContentValues();
-
-        values.put(TABLE_ACHIEVEMENTS_NAME, achievement.getName());
-        values.put(TABLE_ACHIEVEMENTS_REACHED, achievement.isReached());
-        db.insert(TABLE_ACHIEVEMENTS, null, values);
-    }
-
     /**
-     * Permet d'ajouter une
-     *
+     * Ajoute un accomplissement à la BDD (déjà ouverte).
+     * @param db
      * @param achievement
      */
-    public void addAchievement(Achievement achievement) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
+    public void initAchievement(SQLiteDatabase db, Achievement achievement) {
         ContentValues values = new ContentValues();
-
         values.put(TABLE_ACHIEVEMENTS_NAME, achievement.getName());
         values.put(TABLE_ACHIEVEMENTS_REACHED, achievement.isReached());
         db.insert(TABLE_ACHIEVEMENTS, null, values);
-
-        db.close();
     }
 
 
@@ -257,7 +243,7 @@ public class AppDatabase extends SQLiteOpenHelper {
 
                 do {
                     String abc = cursor.getString(0);
-                    lstAchievement.add(new Achievement(cursor.getString(1), cursor.getInt(2) == 1 ? true : false));
+                    lstAchievement.add(new Achievement(cursor.getString(1), cursor.getInt(2) == 1));
                 } while (cursor.moveToNext());
             }
 
@@ -270,16 +256,10 @@ public class AppDatabase extends SQLiteOpenHelper {
 
     /*
 méthode qui initialise les succes de base de l"application et qui les sauvegardes dans la bd
-pour que l'on puisse sauvegader si il on été
- */ public static ArrayList<Achievement> lstInitialAchievement;
-
+pour que l'on puisse sauvegader si il on été*/
     private void initialiserLesSuccesDeBase(SQLiteDatabase db) {
-        lstInitialAchievement = new ArrayList<>();
-        lstInitialAchievement.add(new Achievement("burn1calorie", false));
-        lstInitialAchievement.add(new Achievement("complete_first_foot_race", false));
-        for (Achievement achievement : lstInitialAchievement) {
-            AppDatabase.getInstance().initAchievement(db, achievement);
-        }
+        initAchievement(db, new Achievement("burn1calorie", false));
+        initAchievement(db, new Achievement("complete_first_foot_race", false));
     }
 
 

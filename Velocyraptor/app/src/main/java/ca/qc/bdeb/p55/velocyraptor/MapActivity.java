@@ -61,7 +61,6 @@ public class MapActivity extends AppCompatActivity implements
     private Button btnResume;
     private Button btnPause;
 
-
     private final Runnable onChronometerTick = new Runnable() {
         @Override
         public void run() {
@@ -90,7 +89,6 @@ public class MapActivity extends AppCompatActivity implements
     private Location lastLocation;
     private Ghost ghost;
     private Location lastGhostLocation;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,10 +130,6 @@ public class MapActivity extends AppCompatActivity implements
             }
         }
     }
-
-
-
-
 
     private void initialiserBoutons() {
         btnStart = (Button) findViewById(R.id.mapactivity_btn_start);
@@ -277,6 +271,8 @@ public class MapActivity extends AppCompatActivity implements
             case R.id.menu_stats:
                 startActivity(new Intent(this, StatsActivity.class));
                 return true;
+            case R.id.menu_share:
+                ShareUtil.shareResults(this, course);
             default:
                 return super.onOptionsItemSelected(item);
         }

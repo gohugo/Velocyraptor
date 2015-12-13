@@ -1,6 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".gestion_client">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ca.qc.bdeb.p55.velocyraptor.MapActivity">
     <item android:id="@+id/menu_stats" android:title="Statistiques"
         android:orderInCategory="100" app:showAsAction="always" />
     <item android:id="@+id/menu_share" android:title="Partager" android:icon="@drawable/ic_share"

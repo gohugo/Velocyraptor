@@ -78,7 +78,7 @@ public class Course implements Serializable {
             distance += lastLocation.distanceTo(location);
         }
 
-        userPath.add(new RaceMarker(chronometer.getElapsedSeconds(), location));
+        userPath.add(new RaceMarker(getElapsedSeconds(), location));
     }
 
     public int getElapsedMilliseconds() {
@@ -86,7 +86,11 @@ public class Course implements Serializable {
     }
 
     public int getElapsedSeconds(){
-        return chronometer.getElapsedSeconds();
+        return chronometer.getElapsedMilliseconds() / 1000;
+    }
+
+    public int getElapsedMinutes(){
+        return chronometer.getElapsedMilliseconds() / 60000;
     }
 
     public int getDistanceInMeters() {

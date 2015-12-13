@@ -16,6 +16,10 @@ public final class Formatting {
      * @return
      */
     public static String formatDistance(int distance){
+        return formatDistanceWithoutSuffix(distance) + " km";
+    }
+
+    public static String formatDistanceWithoutSuffix(int distance){
         StringBuilder distanceBuilder = new StringBuilder();
         // TODO virgule vs. point (anglais et français)
         if (distance < 1000) {
@@ -29,7 +33,7 @@ public final class Formatting {
             distanceBuilder.append(distance).insert(distanceBuilder.length() - 3, ",");
         }
 
-        return distanceBuilder.append(" km").toString();
+        return distanceBuilder.toString();
     }
 
     /**
