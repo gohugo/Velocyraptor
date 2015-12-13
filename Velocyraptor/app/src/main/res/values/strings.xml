@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Velocyraptor</string>
     <string name="title_activity_map">Course</string>
-    
+
     <string name="title_activity_stats">Statistiques</string>
 
     <string name="title_section1">Cumulatif</string>
@@ -13,19 +13,6 @@
     <string name="Pause">Pause</string>
     <string name="Resume">Resume</string>
     <string name="Stop">Stop</string>
-
-    <string name="sample_show_log">Show Log</string>
-    <string name="sample_hide_log">Hide Log</string>
-     <string name="intro_message">
-        <![CDATA[
-
-
-            A basic sample which shows how to use SlidingTabLayout to display a custom
-            ViewPager title strip which gives continuous feedback to the user when scrolling.
-
-
-        ]]>
-    </string>
 
     <!--type de clourse-->
     <array name="race_types_stats">
@@ -39,4 +26,11 @@
     <string name="totaldistance">Distance totale :</string>
     <string name="totalcalories">Calories totales :</string>
     <string name="totalsteps">Nombre de pas :</string>
+
+    <!--Description des succes-->
+    <string name="burn1calorie"> brulé une calorie !</string>
+    <string name="complete_first_foot_race"> Vous avez complété votre première course à pied!</string>
+    <!--message des succes atteint-->
+    <string name="win_burn1calorie"> Vous avez brulé une calorie !</string>
+    <string name="win_complete_first_foot_race"> Vous avez complété votre première course à pied!</string>
 </resources>

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.qc.bdeb.p55.velocyraptor.MapActivity;
+import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
 import ca.qc.bdeb.p55.velocyraptor.model.RaceMarker;
@@ -33,6 +34,7 @@ public class AppDatabase extends SQLiteOpenHelper {
     private static final String TABLE_RACES_STEPS = "steps";
 
     private static final String TABLE_ACHIEVEMENTS = "achievements";
+    private static final String TABLE_ACHIEVEMENTS_NAME = "name";
     private static final String TABLE_ACHIEVEMENTS_REACHED = "reached";
 
     private static final String TABLE_LASTFOOTRACE = "lastfootrace";
@@ -75,6 +77,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                 ")");
         db.execSQL("create table " + TABLE_ACHIEVEMENTS + " (" +
                 COL_ID + " integer primary key autoincrement," +
+                TABLE_ACHIEVEMENTS_NAME + " text not null," +
                 TABLE_ACHIEVEMENTS_REACHED + " tinyint not null default 0" +
                 ")");
 
@@ -101,7 +104,6 @@ public class AppDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        int bob = course.getTypeCourse().ordinal();
         values.put(TABLE_RACES_TYPE, course.getTypeCourse().ordinal());
         values.put(TABLE_RACES_LENGTH, MapActivity.getDisplayedTime());
         values.put(TABLE_RACES_DISTANCE, course.getDistanceInMeters());
@@ -120,6 +122,22 @@ public class AppDatabase extends SQLiteOpenHelper {
             values.put(TABLE_RACE_LATITUDE, marker.getLocation().getLatitude());
             db.insert(tableContainingThisRace, null, values);
         }
+
+        db.close();
+    }
+
+    /**
+     *Permet d'ajouter une
+     * @param achievement
+     */
+    public void addAchievement(Achievement achievement) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(TABLE_ACHIEVEMENTS_NAME, achievement.getName());
+        values.put(TABLE_ACHIEVEMENTS_REACHED, achievement.isReached());
+        db.insert(TABLE_ACHIEVEMENTS, null, values);
 
         db.close();
     }
@@ -195,7 +213,7 @@ public class AppDatabase extends SQLiteOpenHelper {
 
 
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuerry = "SELECT * FROM " + TABLE_RACES +" order by " + COL_ID+" DESC";
+        String selectQuerry = "SELECT * FROM " + TABLE_RACES + " order by " + COL_ID + " DESC";
         Cursor cursor = db.rawQuery(selectQuerry, null);
         try {
             if (cursor != null) {

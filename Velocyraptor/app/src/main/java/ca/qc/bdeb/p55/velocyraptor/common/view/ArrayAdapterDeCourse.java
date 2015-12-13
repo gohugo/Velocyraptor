@@ -70,6 +70,8 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<HistoriqueDeCourse> {
             holder.lblDistance.setText(Integer.toString(rowItem.getTotalDistance()));
             holder.lblCalorie.setText(Integer.toString(rowItem.getNbCalorieBurn()));
 
+
+
             if (rowItem.getTypeCourse() == Course.TypeCourse.APIED) {
                 holder.layoutNbPAS.setVisibility(View.VISIBLE);
 

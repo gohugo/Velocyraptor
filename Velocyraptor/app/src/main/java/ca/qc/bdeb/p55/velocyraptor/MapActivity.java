@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.games.Games;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -24,10 +26,12 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
 import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
+import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.Ghost;
 import ca.qc.bdeb.p55.velocyraptor.model.RaceMarker;
@@ -56,7 +60,7 @@ public class MapActivity extends AppCompatActivity implements
     private Button btnStop;
     private Button btnResume;
     private Button btnPause;
-    private Course.TypeCourse typeCourseSelectionner = Course.TypeCourse.AUCUN;
+    public static ArrayList<Achievement> lstInitialAchievement;
 
     private final Runnable onChronometerTick = new Runnable() {
         @Override
@@ -77,13 +81,16 @@ public class MapActivity extends AppCompatActivity implements
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
 
-    /** Vrai si un zoom s'est fait à l'emplacement de l'utilisateur au moins une fois. */
+    /**
+     * Vrai si un zoom s'est fait à l'emplacement de l'utilisateur au moins une fois.
+     */
     private boolean hasMovedOnceToUserLocation = false;
 
     private Course course;
     private Location lastLocation;
     private Ghost ghost;
     private Location lastGhostLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +114,7 @@ public class MapActivity extends AppCompatActivity implements
                 .addApi(LocationServices.API)
                 .build();
 
+
         locationRequest = new LocationRequest();
         locationRequest.setInterval(1000);
         locationRequest.setFastestInterval(800);
@@ -119,8 +127,20 @@ public class MapActivity extends AppCompatActivity implements
                 ghost = (Ghost) savedInstanceState.getSerializable(KEY_GHOST);
                 switchButtonsToCurrentRaceState();
                 chronometerText.setText(course.getFormattedElapsedTime());
+
             }
         }
+    }
+
+
+    /*
+    méthode qui initialise les succes de base de l"application et qui les sauvegardes dans la bd
+    pour que l'on puisse sauvegader si il on été
+     */
+    private void initialiserLesSuccesDeBase() {
+        lstInitialAchievement = new ArrayList<>();
+        lstInitialAchievement.add(new Achievement("burn1calorie",false));
+        lstInitialAchievement.add(new Achievement("complete_first_foot_race",false));
     }
 
     private void initialiserBoutons() {
@@ -138,7 +158,7 @@ public class MapActivity extends AppCompatActivity implements
                 course.setOnChronometerTick(onChronometerTick);
                 course.demarrer();
 
-                if(lastLocation != null)
+                if (lastLocation != null)
                     moveUserToOnMap(lastLocation);
 
                 switchButtonsToCurrentRaceState();
@@ -197,7 +217,7 @@ public class MapActivity extends AppCompatActivity implements
         }
     }
 
-    private void setMapControlsEnabled(boolean areEnabled){
+    private void setMapControlsEnabled(boolean areEnabled) {
         UiSettings settings = googleMap.getUiSettings();
         settings.setZoomControlsEnabled(areEnabled);
         settings.setAllGesturesEnabled(areEnabled);
@@ -338,7 +358,7 @@ public class MapActivity extends AppCompatActivity implements
         }
     }
 
-    private void moveUserToOnMap(Location to){
+    private void moveUserToOnMap(Location to) {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toLatLng(to), 16));
     }
 
@@ -353,9 +373,9 @@ public class MapActivity extends AppCompatActivity implements
         lastLocation = to;
     }
 
-    private void drawGhostPath(List<RaceMarker> markers){
-        for(RaceMarker marker : ghost.getReadMarkers()){
-            if(lastGhostLocation != null) {
+    private void drawGhostPath(List<RaceMarker> markers) {
+        for (RaceMarker marker : ghost.getReadMarkers()) {
+            if (lastGhostLocation != null) {
                 drawGhostLine(lastGhostLocation, marker.getLocation());
             }
 
@@ -363,7 +383,7 @@ public class MapActivity extends AppCompatActivity implements
         }
     }
 
-    private void drawGhostLine(Location from, Location to){
+    private void drawGhostLine(Location from, Location to) {
         googleMap.addPolyline(new PolylineOptions()
                 .add(toLatLng(from), toLatLng(to))
                 .width(MAP_LINE_WIDTH)
@@ -375,8 +395,7 @@ public class MapActivity extends AppCompatActivity implements
     }
 
 
-
-    public static  String getDisplayedTime(){
+    public static String getDisplayedTime() {
         return chronometerText.getText().toString();
 
     }
