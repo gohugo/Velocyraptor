@@ -2,6 +2,7 @@ package ca.qc.bdeb.p55.velocyraptor.common;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -99,13 +100,13 @@ public final class Formatting {
         String[] months = resources.getStringArray(R.array.months);
         StringBuilder builder = new StringBuilder();
 
-        if(Locale.getDefault().getDisplayLanguage().equalsIgnoreCase("fr")){
+        if(Locale.getDefault().getISO3Language().startsWith("fr")){
             if(date.getDate() == 1)
                 builder.append("1er");
             else
                 builder.append(date.getDate());
 
-            builder.append(months[date.getMonth()]).append(" ").append(date.getYear() + 1900);
+            builder.append(" ").append(months[date.getMonth()]).append(" ").append(date.getYear() + 1900);
         } else {
             builder.append(months[date.getMonth()]).append(" ");
 
