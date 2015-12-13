@@ -27,5 +27,5 @@
         <!--android:id="@+id/pager"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--tools:context="ca.qc.bdeb.p55.velocyraptor.StatsActivity" />-->
+        <!--tools:context="ca.qc.bdeb.p55.velocyraptor.view.StatsActivity" />-->
 </LinearLayout>

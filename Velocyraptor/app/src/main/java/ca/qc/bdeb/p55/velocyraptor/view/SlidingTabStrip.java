@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ca.qc.bdeb.p55.velocyraptor.common.view;
+package ca.qc.bdeb.p55.velocyraptor.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -24,6 +24,8 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import ca.qc.bdeb.p55.velocyraptor.view.SlidingTabLayout;
 
 class SlidingTabStrip extends LinearLayout {
 

@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="ca.qc.bdeb.p55.velocyraptor.StatsActivity">
+    tools:context="ca.qc.bdeb.p55.velocyraptor.view.StatsActivity">
     <item android:id="@+id/menu_race" android:title="@string/title_activity_map"
         android:orderInCategory="100" app:showAsAction="always" />
 </menu>

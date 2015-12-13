@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ca.qc.bdeb.p55.velocyraptor;
+package ca.qc.bdeb.p55.velocyraptor.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,23 +28,20 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import ca.qc.bdeb.p55.velocyraptor.R;
 import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
-import ca.qc.bdeb.p55.velocyraptor.common.view.ArrayAdapterAchievement;
-import ca.qc.bdeb.p55.velocyraptor.common.view.ArrayAdapterDeCourse;
-import ca.qc.bdeb.p55.velocyraptor.common.view.SlidingTabLayout;
 import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
 
 /**
- * A basic sample which shows how to use {@link ca.qc.bdeb.p55.velocyraptor.common.view.SlidingTabLayout}
+ * A basic sample which shows how to use {@link SlidingTabLayout}
  * to display a custom {@link ViewPager} title strip which gives continuous feedback to the user
  * when scrolling.
  */
@@ -77,10 +74,8 @@ public class SlidingTabsBasicFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_sample, container, false);
+        return inflater.inflate(R.layout.fragment_sliding_tabs, container, false);
     }
-
-    // BEGIN_INCLUDE (fragment_onviewcreated)
 
     /**
      * This is called after the {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)} has finished.
@@ -93,20 +88,15 @@ public class SlidingTabsBasicFragment extends Fragment {
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // BEGIN_INCLUDE (setup_viewpager)
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mViewPager.setAdapter(new SamplePagerAdapter());
-        // END_INCLUDE (setup_viewpager)
 
-        // BEGIN_INCLUDE (setup_slidingtablayout)
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
-        // END_INCLUDE (setup_slidingtablayout)
     }
-    // END_INCLUDE (fragment_onviewcreated)
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} used to display pages in this sample.
@@ -153,7 +143,6 @@ public class SlidingTabsBasicFragment extends Fragment {
             }
             return null;
         }
-        // END_INCLUDE (pageradapter_getpagetitle)
 
         /**
          * Instantiate the {@link View} which should be displayed at {@code position}. Here we
@@ -184,7 +173,7 @@ public class SlidingTabsBasicFragment extends Fragment {
                     ListView listViewHistorique = (ListView) view.findViewById(R.id.historiquecourse_lstview);
                     List<HistoriqueDeCourse> lstCourse = AppDatabase.getInstance().getAllLastRaces();
                     if (lstCourse != null) {
-                        ArrayAdapterDeCourse adapterDeCourse = new ArrayAdapterDeCourse(getActivity(), R.layout.historique_une_course, lstCourse);
+                        RaceArrayAdapter adapterDeCourse = new RaceArrayAdapter(getActivity(), R.layout.list_item_course, lstCourse);
                         listViewHistorique.setAdapter(adapterDeCourse);
                     }
                     break;
@@ -194,7 +183,7 @@ public class SlidingTabsBasicFragment extends Fragment {
                             container, false);
                     ListView achievementListView = (ListView) view.findViewById(R.id.accomplissement_lstview);
                     List<Achievement> lstAchievement = AppDatabase.getInstance().getAllAchievements();
-                    achievementListView.setAdapter(new ArrayAdapterAchievement(getActivity(), R.layout.accomplissement_un_accomplissement, lstAchievement));
+                    achievementListView.setAdapter(new AchievementArrayAdapter(getActivity(), R.layout.list_item_accomplissement, lstAchievement));
                     container.addView(view);
                     break;
             }

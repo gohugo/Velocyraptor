@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ca.qc.bdeb.p55.velocyraptor.common.view;
+package ca.qc.bdeb.p55.velocyraptor.view;
 
 import android.content.Context;
 import android.graphics.Typeface;

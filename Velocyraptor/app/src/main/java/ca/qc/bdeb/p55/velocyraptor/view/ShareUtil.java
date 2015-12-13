@@ -1,9 +1,10 @@
-package ca.qc.bdeb.p55.velocyraptor;
+package ca.qc.bdeb.p55.velocyraptor.view;
 
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import ca.qc.bdeb.p55.velocyraptor.R;
 import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 

@@ -1,4 +1,4 @@
-package ca.qc.bdeb.p55.velocyraptor.common.view;
+package ca.qc.bdeb.p55.velocyraptor.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,15 +10,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
-
 import ca.qc.bdeb.p55.velocyraptor.R;
 import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
 
 
-public class ArrayAdapterDeCourse extends ArrayAdapter<HistoriqueDeCourse> {
-    public ArrayAdapterDeCourse(Context context, int resource, List<HistoriqueDeCourse> item) {
+public class RaceArrayAdapter extends ArrayAdapter<HistoriqueDeCourse> {
+    public RaceArrayAdapter(Context context, int resource, List<HistoriqueDeCourse> item) {
         super(context, resource, item);
     }
 
@@ -38,7 +37,7 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<HistoriqueDeCourse> {
 
         LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.historique_une_course, null);
+            convertView = mInflater.inflate(R.layout.list_item_course, null);
             holder = new CourseHistoryHolder();
 
             holder.lblDate = (TextView) convertView.findViewById(R.id.historiquecourse_lbl_datevalue);

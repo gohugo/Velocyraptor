@@ -1,4 +1,4 @@
-package ca.qc.bdeb.p55.velocyraptor;
+package ca.qc.bdeb.p55.velocyraptor.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.List;
 
+import ca.qc.bdeb.p55.velocyraptor.R;
 import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
 import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;

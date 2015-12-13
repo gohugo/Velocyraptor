@@ -1,23 +1,13 @@
-package ca.qc.bdeb.p55.velocyraptor;
-
-import java.util.Locale;
+package ca.qc.bdeb.p55.velocyraptor.view;
 
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+
+import ca.qc.bdeb.p55.velocyraptor.R;
 
 public class StatsActivity extends AppCompatActivity {
     private android.support.v7.widget.Toolbar toolbar;

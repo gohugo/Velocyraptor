@@ -1,4 +1,4 @@
-package ca.qc.bdeb.p55.velocyraptor.common.view;
+package ca.qc.bdeb.p55.velocyraptor.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,11 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ca.qc.bdeb.p55.velocyraptor.R;
@@ -21,8 +19,8 @@ import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 /**
  * Crée les items affichés dans la liste des accomplissements.
  */
-public class ArrayAdapterAchievement extends ArrayAdapter<Achievement> {
-    public ArrayAdapterAchievement(Context context, int resource, List<Achievement> item) {
+public class AchievementArrayAdapter extends ArrayAdapter<Achievement> {
+    public AchievementArrayAdapter(Context context, int resource, List<Achievement> item) {
         super(context, resource, item);
     }
 
@@ -33,13 +31,12 @@ public class ArrayAdapterAchievement extends ArrayAdapter<Achievement> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
         AchievementHolder holder = null;
         final Achievement achievement = getItem(position);
 
         LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.accomplissement_un_accomplissement, null);
+            convertView = mInflater.inflate(R.layout.list_item_accomplissement, null);
             holder = new AchievementHolder();
 
             holder.lblDescription = (TextView) convertView.findViewById(R.id.accomplissement_lbl_description);
@@ -58,10 +55,6 @@ public class ArrayAdapterAchievement extends ArrayAdapter<Achievement> {
             holder = (AchievementHolder) convertView.getTag();
         }
 
-        //do set text therre
-
-
         return convertView;
-
     }
 }
