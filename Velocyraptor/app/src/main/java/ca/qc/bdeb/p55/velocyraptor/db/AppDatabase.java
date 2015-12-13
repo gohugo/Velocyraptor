@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import ca.qc.bdeb.p55.velocyraptor.MapActivity;
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
@@ -34,7 +33,6 @@ public class AppDatabase extends SQLiteOpenHelper {
     private static final String TABLE_RACES_STEPS = "steps";
 
     private static final String TABLE_ACHIEVEMENTS = "achievements";
-    private static final String TABLE_ACHIEVEMENTS_NAME = "name";
     private static final String TABLE_ACHIEVEMENTS_REACHED = "reached";
 
     private static final String TABLE_LASTFOOTRACE = "lastfootrace";
@@ -76,8 +74,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                 TABLE_RACES_STEPS + " integer" +
                 ")");
         db.execSQL("create table " + TABLE_ACHIEVEMENTS + " (" +
-                COL_ID + " integer primary key autoincrement," +
-                TABLE_ACHIEVEMENTS_NAME + " text not null," +
+                COL_ID + " integer primary key," +
                 TABLE_ACHIEVEMENTS_REACHED + " tinyint not null default 0" +
                 ")");
 
@@ -89,7 +86,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                     ")");
         }
 
-        initialiserLesSuccesDeBase(db);
+        initializeAllAchievements(db);
     }
 
     @Override
@@ -128,30 +125,13 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void initAchievement(SQLiteDatabase db, Achievement achievement) {
-
-        ContentValues values = new ContentValues();
-
-        values.put(TABLE_ACHIEVEMENTS_NAME, achievement.getName());
-        values.put(TABLE_ACHIEVEMENTS_REACHED, achievement.isReached());
-        db.insert(TABLE_ACHIEVEMENTS, null, values);
-    }
-
     /**
-     * Permet d'ajouter une
-     *
+     * Ajoute un accomplissement à la BDD (déjà ouverte).
+     * @param db
      * @param achievement
      */
-    public void addAchievement(Achievement achievement) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public void initAchievement(SQLiteDatabase db, Achievement achievement) {
 
-        ContentValues values = new ContentValues();
-
-        values.put(TABLE_ACHIEVEMENTS_NAME, achievement.getName());
-        values.put(TABLE_ACHIEVEMENTS_REACHED, achievement.isReached());
-        db.insert(TABLE_ACHIEVEMENTS, null, values);
-
-        db.close();
     }
 
 
@@ -220,7 +200,7 @@ public class AppDatabase extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HistoriqueDeCourse> getAllLastRaces() {
+    public List<HistoriqueDeCourse> getAllLastRaces() {
         ArrayList<HistoriqueDeCourse> lstCourses = new ArrayList<>();
 
 
@@ -244,41 +224,44 @@ public class AppDatabase extends SQLiteOpenHelper {
         return lstCourses;
     }
 
-    public ArrayList<Achievement> getAllAchievement() {
-        ArrayList<Achievement> lstAchievement = new ArrayList<>();
+    public List<Achievement> getAllAchievements() {
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<Achievement> achievements = new ArrayList<>();
 
+        final String selectQuery = "SELECT * FROM " + TABLE_ACHIEVEMENTS
+                + " order by " + TABLE_ACHIEVEMENTS_REACHED + " desc";
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuerry = "SELECT * FROM " + TABLE_ACHIEVEMENTS + " order by " + TABLE_ACHIEVEMENTS_REACHED;
-        Cursor cursor = db.rawQuery(selectQuerry, null);
-        try {
-            if (cursor != null) {
-                cursor.moveToFirst();
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
-                do {
-                    String abc = cursor.getString(0);
-                    lstAchievement.add(new Achievement(cursor.getString(1), cursor.getInt(2) == 1 ? true : false));
-                } while (cursor.moveToNext());
-            }
-
-
-        } catch (CursorIndexOutOfBoundsException e) {
-            lstAchievement = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex(COL_ID));
+                boolean isReached = cursor.getInt(cursor.getColumnIndex(TABLE_ACHIEVEMENTS_REACHED)) == 1;
+                achievements.add(new Achievement(id, isReached));
+            } while (cursor.moveToNext());
         }
-        return lstAchievement;
+
+        return achievements;
+    }
+
+    public void markAchievementAsReached(int id){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(TABLE_ACHIEVEMENTS_REACHED, true);
+        db.update(TABLE_ACHIEVEMENTS, values, COL_ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
     }
 
     /*
 méthode qui initialise les succes de base de l"application et qui les sauvegardes dans la bd
-pour que l'on puisse sauvegader si il on été
- */ public static ArrayList<Achievement> lstInitialAchievement;
-
-    private void initialiserLesSuccesDeBase(SQLiteDatabase db) {
-        lstInitialAchievement = new ArrayList<>();
-        lstInitialAchievement.add(new Achievement("burn 1 calorie", false));
-        lstInitialAchievement.add(new Achievement("complete first foot race", false));
-        for (Achievement achievement : lstInitialAchievement) {
-            AppDatabase.getInstance().initAchievement(db, achievement);
+pour que l'on puisse sauvegader si il on été*/
+    private void initializeAllAchievements(SQLiteDatabase db) {
+        for(int achievement : Achievement.ALL_ACHIEVEMENT_INDEXES) {
+            ContentValues values = new ContentValues();
+            values.put(COL_ID, achievement);
+            values.put(TABLE_ACHIEVEMENTS_REACHED, false);
+            db.insert(TABLE_ACHIEVEMENTS, null, values);
         }
     }
 

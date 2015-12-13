@@ -44,10 +44,6 @@ public class CustomChronometer implements Serializable {
             return cumulativeTime;
     }
 
-    public int getElapsedSeconds(){
-        return getElapsedMilliseconds() / 1000;
-    }
-
     /**
      * Définit la méthode qui sera appelée à chaque avancement du timer.
      * @param callback {@link Runnable} qui contient la méthode à éxécuter.

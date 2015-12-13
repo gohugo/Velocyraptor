@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -61,7 +62,6 @@ public class MapActivity extends AppCompatActivity implements
     private Button btnResume;
     private Button btnPause;
 
-
     private final Runnable onChronometerTick = new Runnable() {
         @Override
         public void run() {
@@ -91,7 +91,6 @@ public class MapActivity extends AppCompatActivity implements
     private Ghost ghost;
     private Location lastGhostLocation;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +105,6 @@ public class MapActivity extends AppCompatActivity implements
 
         initialiserBoutons();
 
-
         setSupportActionBar(toolbar);
 
         googleApiClient = new GoogleApiClient.Builder(this)
@@ -114,7 +112,6 @@ public class MapActivity extends AppCompatActivity implements
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-
 
         locationRequest = new LocationRequest();
         locationRequest.setInterval(1000);
@@ -132,10 +129,6 @@ public class MapActivity extends AppCompatActivity implements
             }
         }
     }
-
-
-
-
 
     private void initialiserBoutons() {
         btnStart = (Button) findViewById(R.id.mapactivity_btn_start);
@@ -182,7 +175,7 @@ public class MapActivity extends AppCompatActivity implements
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                course.endRaceAndSave();
+                showReachedAchievements(course.endRaceAndSave());
                 updateDuration();
                 switchButtonsToCurrentRaceState();
                 setMapControlsEnabled(true);
@@ -221,6 +214,32 @@ public class MapActivity extends AppCompatActivity implements
 
     private void updateDuration() {
         chronometerText.setText(Formatting.formatExactDuration(course.getElapsedMilliseconds()));
+    }
+
+    /**
+     * Affiche un Toast indiquant que des accomplissements ont été atteints.
+     * @param achievements Accomplissements atteints.
+     */
+    private void showReachedAchievements(List<Achievement> achievements){
+        if(achievements.size() > 0) {
+            StringBuilder messageBuilder = new StringBuilder();
+
+            messageBuilder.append(getString(R.string.reachedAchievements1))
+                    .append(achievements.size())
+                    .append(getString(achievements.size() == 1
+                            ? R.string.reachedAchievements2_singular : R.string.reachedAchievements2_plural))
+                    .append("\n");
+
+            for (Achievement achievement : achievements) {
+                int achievementDescriptionResourceId = getResources()
+                        .getIdentifier("achievement" + achievement.getId(), "string", getPackageName());
+                messageBuilder.append(" - ").append(getString(achievementDescriptionResourceId)).append("\n");
+            }
+
+            messageBuilder.deleteCharAt(messageBuilder.length() - 1);
+
+            Toast.makeText(getApplicationContext(), messageBuilder.toString(), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -277,6 +296,8 @@ public class MapActivity extends AppCompatActivity implements
             case R.id.menu_stats:
                 startActivity(new Intent(this, StatsActivity.class));
                 return true;
+            case R.id.menu_share:
+                ShareUtil.shareResults(this, course);
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -78,7 +78,7 @@ public class Course implements Serializable {
             distance += lastLocation.distanceTo(location);
         }
 
-        userPath.add(new RaceMarker(chronometer.getElapsedSeconds(), location));
+        userPath.add(new RaceMarker(getElapsedSeconds(), location));
     }
 
     public int getElapsedMilliseconds() {
@@ -86,7 +86,11 @@ public class Course implements Serializable {
     }
 
     public int getElapsedSeconds(){
-        return chronometer.getElapsedSeconds();
+        return chronometer.getElapsedMilliseconds() / 1000;
+    }
+
+    public int getElapsedMinutes(){
+        return chronometer.getElapsedMilliseconds() / 60000;
     }
 
     public int getDistanceInMeters() {
@@ -115,18 +119,85 @@ public class Course implements Serializable {
 
     /**
      * Enregistre cette course dans la BDD.
+     * @return Tous les accomplissements qui ont été atteints durant cette course, s'il y en a.
      */
-    public void endRaceAndSave() {
+    public List<Achievement> endRaceAndSave() {
         chronometer.stop();
         state = State.STOPPED;
         AppDatabase.getInstance().addRace(userPath, this);
+        return checkIfAchievementsAreReachedAndMarkThemAsReachedIfTheyAre();
+    }
+
+    private List<Achievement> checkIfAchievementsAreReachedAndMarkThemAsReachedIfTheyAre(){
+        ArrayList<Achievement> reached = new ArrayList<>();
+        List<Achievement> achievements = AppDatabase.getInstance().getAllAchievements();
+
+        for(Achievement achievement : achievements){
+            if(!achievement.isReached()){
+                int id = achievement.getId();
+
+                if(id == Achievement.BURN_ONE_CALORIE && getCalories() > 0)
+                    reached.add(achievement);
+                else if(id == Achievement.REACH_ALL_ACHIEVEMENTS && Achievement.areAllButLastAchievementsReached(achievements))
+                    reached.add(achievement);
+                else if(typeCourse == TypeCourse.APIED){
+                    if(id == Achievement.COMPLETE_FIRST_FOOT_RACE)
+                        reached.add(achievement);
+                    else if(id == Achievement.RUN_500_METERS && getDistanceInMeters() >= 500)
+                        reached.add(achievement);
+                    else if(id == Achievement.RUN_1_KM && getDistanceInMeters() >= 1000)
+                        reached.add(achievement);
+                    else if(id == Achievement.RUN_2_KM && getDistanceInMeters() >= 2000)
+                        reached.add(achievement);
+                    else if(id == Achievement.RUN_5_KM && getDistanceInMeters() >= 5000)
+                        reached.add(achievement);
+                    else if(id == Achievement.RUN_MARATHON && getDistanceInMeters() >= 42200)
+                        reached.add(achievement);
+                    else if(id == Achievement.RUN_10_MINUTES && getElapsedMinutes() >= 10)
+                        reached.add(achievement);
+                    else if(id == Achievement.RUN_20_MINUTES && getElapsedMinutes() >= 20)
+                        reached.add(achievement);
+                    else if(id == Achievement.AVERAGE_SPEED_8KMH_OR_MORE && getAverageSpeed() >= 8)
+                        reached.add(achievement);
+                    else if(id == Achievement.AVERAGE_SPEED_11KMH_OR_MORE && getAverageSpeed() >= 11)
+                        reached.add(achievement);
+                } else {
+                    if (id == Achievement.COMPLETE_FIRST_BIKE_RACE)
+                        reached.add(achievement);
+                    else if (id == Achievement.CYCLE_5_KM && getDistanceInMeters() >= 5000)
+                        reached.add(achievement);
+                    else if (id == Achievement.CYCLE_20_KM && getDistanceInMeters() >= 20000)
+                        reached.add(achievement);
+                    else if (id == Achievement.CYCLE_100_KM && getDistanceInMeters() >= 100000)
+                        reached.add(achievement);
+                    else if (id == Achievement.CYCLE_30_MINUTES && getElapsedMinutes() >= 30)
+                        reached.add(achievement);
+                    else if (id == Achievement.CYCLE_1_HOUR && getElapsedMinutes() >= 60)
+                        reached.add(achievement);
+                    else if (id == Achievement.CYCLE_90_MINUTES && getElapsedMinutes() >= 90)
+                        reached.add(achievement);
+                }
+            }
+        }
+
+        for(Achievement reachedAchivement : reached){
+            reachedAchivement.markAsReached();
+        }
+
+        return reached;
+    }
+
+    /**
+     * Donne la vitesse moyenne en km/h.
+     * @return Vitesse moyenne en km/h.
+     */
+    private double getAverageSpeed(){
+        return (distance / getElapsedMilliseconds()) * 3600;
     }
 
     public enum TypeCourse {
-
-        APIED, VELO, AUCUN
+        APIED, VELO
     }
-
 
     public enum State {
         STARTED, PAUSED, STOPPED

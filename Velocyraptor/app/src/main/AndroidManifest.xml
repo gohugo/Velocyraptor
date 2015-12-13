@@ -24,11 +24,12 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAWHtvASoJ1H4E8tNvpi9vK_ox6zHL70X8" />
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".MapActivity"
-            android:label="@string/title_activity_map">
+            android:label="@string/title_activity_map"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +39,8 @@
 
         <activity
             android:name="ca.qc.bdeb.p55.velocyraptor.StatsActivity"
-            android:label="@string/title_activity_stats"></activity>
+            android:label="@string/title_activity_stats"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
