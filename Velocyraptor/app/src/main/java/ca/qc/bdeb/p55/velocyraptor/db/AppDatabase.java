@@ -258,8 +258,8 @@ public class AppDatabase extends SQLiteOpenHelper {
 méthode qui initialise les succes de base de l"application et qui les sauvegardes dans la bd
 pour que l'on puisse sauvegader si il on été*/
     private void initialiserLesSuccesDeBase(SQLiteDatabase db) {
-        initAchievement(db, new Achievement("burn1calorie", false));
-        initAchievement(db, new Achievement("complete_first_foot_race", false));
+        initAchievement(db, new Achievement("burn 1 calorie", false));
+        initAchievement(db, new Achievement("complete first foot race", false));
     }
 
 
