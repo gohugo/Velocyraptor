@@ -132,8 +132,6 @@ public class SlidingTabsBasicFragment extends Fragment {
             return o == view;
         }
 
-        // BEGIN_INCLUDE (pageradapter_getpagetitle)
-
         /**
          * Return the title of the item at {@code position}. This is important as what this method
          * returns is what is displayed in the {@link SlidingTabLayout}.
@@ -183,8 +181,7 @@ public class SlidingTabsBasicFragment extends Fragment {
                     container.addView(view);
 
                     ListView listViewHistorique = (ListView) view.findViewById(R.id.historiquecourse_lstview);
-                    ArrayList<HistoriqueDeCourse> lstCourse = new ArrayList<>();
-                    lstCourse = AppDatabase.getInstance().getAllLastRaces();
+                    ArrayList<HistoriqueDeCourse> lstCourse = AppDatabase.getInstance().getAllLastRaces();
                     if (lstCourse != null) {
                         ArrayAdapterDeCourse adapterDeCourse = new ArrayAdapterDeCourse(getActivity(), R.layout.historique_une_course, lstCourse);
                         listViewHistorique.setAdapter(adapterDeCourse);
@@ -194,11 +191,9 @@ public class SlidingTabsBasicFragment extends Fragment {
                 case 2:
                     view = getActivity().getLayoutInflater().inflate(R.layout.fragment_accomplissement,
                             container, false);
-                    ListView listViewSucces = (ListView) view.findViewById(R.id.accomplissement_lstview);
+                    ListView achievementListView = (ListView) view.findViewById(R.id.accomplissement_lstview);
                     ArrayList<Achievement> lstAchievement = AppDatabase.getInstance().getAllAchievements();
-                    ArrayAdapterAchievement adapteurAchievement = new ArrayAdapterAchievement(getActivity(), R.layout.accomplissement_un_accomplissement, lstAchievement);
-                    listViewSucces.setAdapter(adapteurAchievement);
-                    // Add the newly created View to the ViewPager
+                    achievementListView.setAdapter(new ArrayAdapterAchievement(getActivity(), R.layout.accomplissement_un_accomplissement, lstAchievement));
                     container.addView(view);
                     break;
             }

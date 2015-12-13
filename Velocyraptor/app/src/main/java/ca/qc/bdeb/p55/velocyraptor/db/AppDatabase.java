@@ -242,6 +242,15 @@ public class AppDatabase extends SQLiteOpenHelper {
         return lstAchievement;
     }
 
+    public void markAchievementAsReached(int id){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(TABLE_ACHIEVEMENTS_REACHED, true);
+        db.update(TABLE_ACHIEVEMENTS, values, COL_ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+
     /*
 méthode qui initialise les succes de base de l"application et qui les sauvegardes dans la bd
 pour que l'on puisse sauvegader si il on été*/

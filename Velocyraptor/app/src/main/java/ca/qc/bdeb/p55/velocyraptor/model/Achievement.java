@@ -1,5 +1,7 @@
 package ca.qc.bdeb.p55.velocyraptor.model;
 
+import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
+
 /**
  * Created by hugo on 2015-12-12.
  */
@@ -58,8 +60,9 @@ public class Achievement {
         return reached;
     }
 
-    public void setReached(boolean reached) {
-        this.reached = reached;
+    public void markAsReached(){
+        reached = true;
+        AppDatabase.getInstance().markAchievementAsReached(id);
     }
 
     public int getId(){
