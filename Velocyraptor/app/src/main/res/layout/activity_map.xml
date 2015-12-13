@@ -100,7 +100,7 @@
                         android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
 
-                <LinearLayout
+                <LinearLayout android:id="@+id/layoutpas"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -115,7 +115,7 @@
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
-                        android:id="@+id/mapactivity_lbl_rythme"
+                        android:id="@+id/mapactivity_lbl_titrepas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

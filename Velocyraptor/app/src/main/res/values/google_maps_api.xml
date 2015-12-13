@@ -16,6 +16,12 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
 
     Juste au cas, la nouvelle clé :
     AIzaSyBl3wj7YBf3zlLAdf-pLqpmXJGMbsF5rxI
+
+    cle hugp
+AIzaSyAWHtvASoJ1H4E8tNvpi9vK_ox6zHL70X8
+
+    cle maxim
+    AIzaSyDlNWcxjXQ1ehhFb9WBSuzEnE2bl7Ffnfs
     -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDlNWcxjXQ1ehhFb9WBSuzEnE2bl7Ffnfs</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAWHtvASoJ1H4E8tNvpi9vK_ox6zHL70X8</string>
 </resources>
