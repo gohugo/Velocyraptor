@@ -55,8 +55,10 @@ public class MapActivity extends AppCompatActivity implements
     public TextView chronometerText;
     private TextView distanceText;
     private TextView calorieText;
+
     private LinearLayout stepLayout;
     private TextView stepText;
+
     private android.support.v7.widget.Toolbar toolbar;
     private Button btnStart;
     private Button btnStop;
@@ -104,7 +106,10 @@ public class MapActivity extends AppCompatActivity implements
         distanceText = (TextView) findViewById(R.id.mapactivity_lbl_distancevalue);
         calorieText = (TextView) findViewById(R.id.mapactivity_lbl_calorievalue);
         stepText = (TextView) findViewById(R.id.mapactivity_lbl_rythmevalue);
+
+
         stepLayout = (LinearLayout) findViewById(R.id.map_layout_steps);
+
 
         initialiserBoutons();
 
@@ -191,16 +196,61 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
+
+                // set value from the dialog inside our runnable implementation
+
+
+                course = new Course(Course.TypeCourse.APIED);
+                ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.APIED);
+                course.setContext(getApplicationContext());
+                course.setOnChronometerTick(onChronometerTick);
+                course.demarrer();
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
+
+
+                if (lastLocation != null)
+                    moveUserToOnMap(lastLocation);
+
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
+                // ** HERE IS WHERE THE MAGIC HAPPENS! **
+                // now that we have stored the value, lets run our Runnable
                 stepLayout.setVisibility(View.VISIBLE);
                 postrun.raceTypeChosen(Course.TypeCourse.APIED);
+                return;
+
             }
         });
         alert.setNegativeButton(R.string.bikerace, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+
+                // set value from the dialog inside our runnable implementation
+
+
+                course = new Course(Course.TypeCourse.VELO);
+                ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.VELO);
+                course.setContext(getApplicationContext());
+                course.setOnChronometerTick(onChronometerTick);
+                course.demarrer();
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
+
+
+                if (lastLocation != null)
+                    moveUserToOnMap(lastLocation);
+
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
+                // ** HERE IS WHERE THE MAGIC HAPPENS! **
+                // now that we have stored the value, lets run our Runnable
+
+
                 stepLayout.setVisibility(View.GONE);
                 postrun.raceTypeChosen(Course.TypeCourse.VELO);
+
             }
         });
 
