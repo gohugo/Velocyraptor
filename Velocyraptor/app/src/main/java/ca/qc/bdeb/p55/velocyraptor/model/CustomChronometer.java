@@ -1,11 +1,7 @@
 package ca.qc.bdeb.p55.velocyraptor.model;
 
 import android.os.SystemClock;
-import android.util.Log;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.Timer;
@@ -32,18 +28,24 @@ public class CustomChronometer implements Serializable {
     }
     
     public void stop(){
-        onGoing = false;
-        cumulativeTime += SystemClock.elapsedRealtime() - startedAt;
+        if(onGoing) {
+            onGoing = false;
+            cumulativeTime += SystemClock.elapsedRealtime() - startedAt;
 
-        if(tickTimer != null)
-            tickTimer.cancel();
+            if (tickTimer != null)
+                tickTimer.cancel();
+        }
     }
     
-    public int getElapsedSeconds(){
+    public int getElapsedMilliseconds(){
         if(onGoing)
             return cumulativeTime + (int) (SystemClock.elapsedRealtime() - startedAt);
         else
             return cumulativeTime;
+    }
+
+    public int getElapsedSeconds(){
+        return getElapsedMilliseconds() / 1000;
     }
 
     /**
@@ -78,39 +80,4 @@ public class CustomChronometer implements Serializable {
             }
         };
     }
-    
-    @Override
-    public String toString(){
-        DecimalFormat df = new DecimalFormat("00");
-        StringBuilder builder = new StringBuilder();
-        int elapsedSeconds = getElapsedSeconds();
-
-        int hours = elapsedSeconds / (3600 * 1000);
-        int remaining = elapsedSeconds % (3600 * 1000);
-
-        int minutes = remaining / (60 * 1000);
-        remaining = remaining % (60 * 1000);
-
-        int seconds = remaining / 1000;
-        remaining = remaining % 1000;
-
-        int hundredths = remaining / 10;
-
-        if (hours > 0) {
-            builder.append(df.format(hours))
-                    .append(":");
-        }
-
-        builder.append(df.format(minutes))
-                .append(":")
-                .append(df.format(seconds))
-                .append(".")
-                .append(df.format(hundredths));
-
-        return builder.toString();
-    }
-
-
-
-
 }

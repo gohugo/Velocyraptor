@@ -6,10 +6,10 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import ca.qc.bdeb.p55.velocyraptor.MapActivity;
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
@@ -70,7 +70,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_RACES + " (" +
                 COL_ID + " integer primary key autoincrement," +
                 TABLE_RACES_TYPE + " integer not null," +
-                TABLE_RACES_LENGTH + " text not null," +
+                TABLE_RACES_LENGTH + " integer not null," +
                 TABLE_RACES_DISTANCE + " integer not null," +
                 TABLE_RACES_CALORIES + " integer not null," +
                 TABLE_RACES_STEPS + " integer" +
@@ -105,7 +105,7 @@ public class AppDatabase extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(TABLE_RACES_TYPE, course.getTypeCourse().ordinal());
-        values.put(TABLE_RACES_LENGTH, MapActivity.getDisplayedTime());
+        values.put(TABLE_RACES_LENGTH, course.getElapsedMilliseconds());
         values.put(TABLE_RACES_DISTANCE, course.getDistanceInMeters());
         values.put(TABLE_RACES_CALORIES, course.getCalories());
         if (course.getTypeCourse() == Course.TypeCourse.APIED)
@@ -127,7 +127,8 @@ public class AppDatabase extends SQLiteOpenHelper {
     }
 
     /**
-     *Permet d'ajouter une
+     * Permet d'ajouter une
+     *
      * @param achievement
      */
     public void addAchievement(Achievement achievement) {
@@ -181,28 +182,28 @@ public class AppDatabase extends SQLiteOpenHelper {
         return result;
     }
 
-    public int getTotalDuration(Course.TypeCourse typeCourse) {
-        return getSumOfRaceColumn(TABLE_RACES_LENGTH, typeCourse);
+    public int getTotalDurationInSeconds(Course.TypeCourse typeCourse) {
+        return (int) (getSumOfRaceColumn(TABLE_RACES_LENGTH, typeCourse) / 1000);
     }
 
     public int getTotalDistance(Course.TypeCourse typeCourse) {
-        return getSumOfRaceColumn(TABLE_RACES_DISTANCE, typeCourse);
+        return (int) getSumOfRaceColumn(TABLE_RACES_DISTANCE, typeCourse);
     }
 
     public int getTotalCalories(Course.TypeCourse typeCourse) {
-        return getSumOfRaceColumn(TABLE_RACES_CALORIES, typeCourse);
+        return (int) getSumOfRaceColumn(TABLE_RACES_CALORIES, typeCourse);
     }
 
     public int getTotalSteps() {
-        return getSumOfRaceColumn(TABLE_RACES_STEPS, Course.TypeCourse.APIED);
+        return (int) getSumOfRaceColumn(TABLE_RACES_STEPS, Course.TypeCourse.APIED);
     }
 
-    private int getSumOfRaceColumn(String column, Course.TypeCourse typeCourse) {
+    private long getSumOfRaceColumn(String column, Course.TypeCourse typeCourse) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("select sum(" + column + ") from " + TABLE_RACES
                 + " where " + TABLE_RACES_TYPE + " = ?", new String[]{String.valueOf(typeCourse.ordinal())});
         cursor.moveToFirst();
-        int result = cursor.getInt(0);
+        long result = cursor.getLong(0);
         db.close();
         return result;
     }
@@ -231,6 +232,31 @@ public class AppDatabase extends SQLiteOpenHelper {
         }
         return lstCourses;
     }
+
+    public ArrayList<Achievement> getAllAchievement() {
+        ArrayList<Achievement> lstAchievement = new ArrayList<>();
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuerry = "SELECT * FROM " + TABLE_ACHIEVEMENTS + " order by " + TABLE_ACHIEVEMENTS_REACHED;
+        Cursor cursor = db.rawQuery(selectQuerry, null);
+        try {
+            if (cursor != null) {
+                cursor.moveToFirst();
+
+                do {
+                    String abc = cursor.getString(0);
+                    lstAchievement.add(new Achievement(cursor.getString(1), cursor.getInt(2) == 1 ? true : false));
+                } while (cursor.moveToNext());
+            }
+
+
+        } catch (CursorIndexOutOfBoundsException e) {
+            lstAchievement = null;
+        }
+        return lstAchievement;
+    }
+
 
     private String getRaceTableFromType(Course.TypeCourse typeCourse) {
         return typeCourse == Course.TypeCourse.APIED ? TABLE_LASTFOOTRACE : TABLE_LASTBIKERACE;

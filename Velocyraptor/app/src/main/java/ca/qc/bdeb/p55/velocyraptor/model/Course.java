@@ -81,11 +81,11 @@ public class Course implements Serializable {
         userPath.add(new RaceMarker(chronometer.getElapsedSeconds(), location));
     }
 
-    public String getFormattedElapsedTime() {
-        return chronometer.toString();
+    public int getElapsedMilliseconds() {
+        return chronometer.getElapsedMilliseconds();
     }
 
-    public int getElapsedSeconds() {
+    public int getElapsedSeconds(){
         return chronometer.getElapsedSeconds();
     }
 

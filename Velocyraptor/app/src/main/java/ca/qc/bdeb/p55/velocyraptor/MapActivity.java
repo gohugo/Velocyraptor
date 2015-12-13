@@ -51,7 +51,7 @@ public class MapActivity extends AppCompatActivity implements
     private static final int MAP_LINE_WIDTH = 3;
 
     private GoogleMap googleMap;
-    public static TextView chronometerText;
+    public TextView chronometerText;
     private TextView distanceText;
     private TextView calorieText;
     private TextView stepText;
@@ -68,7 +68,7 @@ public class MapActivity extends AppCompatActivity implements
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    chronometerText.setText(course.getFormattedElapsedTime());
+                    updateDuration();
                     distanceText.setText(Formatting.formatDistance(course.getDistanceInMeters()));
                     calorieText.setText(String.valueOf(course.getCalories()));
                     stepText.setText(String.valueOf(course.getNbCountedSteps()));
@@ -105,6 +105,7 @@ public class MapActivity extends AppCompatActivity implements
         stepText = (TextView) findViewById(R.id.mapactivity_lbl_rythmevalue);
 
         initialiserBoutons();
+        initialiserLesSuccesDeBase();
 
         setSupportActionBar(toolbar);
 
@@ -126,7 +127,7 @@ public class MapActivity extends AppCompatActivity implements
                 course = (Course) savedRace;
                 ghost = (Ghost) savedInstanceState.getSerializable(KEY_GHOST);
                 switchButtonsToCurrentRaceState();
-                chronometerText.setText(course.getFormattedElapsedTime());
+                updateDuration();
 
             }
         }
@@ -139,8 +140,11 @@ public class MapActivity extends AppCompatActivity implements
      */
     private void initialiserLesSuccesDeBase() {
         lstInitialAchievement = new ArrayList<>();
-        lstInitialAchievement.add(new Achievement("burn1calorie",false));
-        lstInitialAchievement.add(new Achievement("complete_first_foot_race",false));
+        lstInitialAchievement.add(new Achievement("burn1calorie", false));
+        lstInitialAchievement.add(new Achievement("complete_first_foot_race", false));
+        for (Achievement achievement : lstInitialAchievement) {
+            AppDatabase.getInstance().addAchievement(achievement);
+        }
     }
 
     private void initialiserBoutons() {
@@ -170,6 +174,7 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 course.interrompre();
+                updateDuration();
                 switchButtonsToCurrentRaceState();
                 setMapControlsEnabled(false);
             }
@@ -188,6 +193,7 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 course.endRaceAndSave();
+                updateDuration();
                 switchButtonsToCurrentRaceState();
                 setMapControlsEnabled(true);
             }
@@ -221,6 +227,10 @@ public class MapActivity extends AppCompatActivity implements
         UiSettings settings = googleMap.getUiSettings();
         settings.setZoomControlsEnabled(areEnabled);
         settings.setAllGesturesEnabled(areEnabled);
+    }
+
+    private void updateDuration() {
+        chronometerText.setText(Formatting.formatExactDuration(course.getElapsedMilliseconds()));
     }
 
     @Override
@@ -394,9 +404,4 @@ public class MapActivity extends AppCompatActivity implements
         return new LatLng(location.getLatitude(), location.getLongitude());
     }
 
-
-    public static String getDisplayedTime() {
-        return chronometerText.getText().toString();
-
-    }
 }

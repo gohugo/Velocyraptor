@@ -18,8 +18,6 @@ public class HistoriqueDeCourse {
         this.nbStep = nbStep;
         this.totalDistance = totalDistance;
         this.nbCalorieBurn = nbCalorieBurn;
-
-
     }
 
     public long getDate() {

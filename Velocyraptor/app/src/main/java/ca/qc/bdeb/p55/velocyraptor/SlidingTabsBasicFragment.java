@@ -28,16 +28,17 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
+import ca.qc.bdeb.p55.velocyraptor.common.view.ArrayAdapterAchievement;
 import ca.qc.bdeb.p55.velocyraptor.common.view.ArrayAdapterDeCourse;
 import ca.qc.bdeb.p55.velocyraptor.common.view.SlidingTabLayout;
 import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
+import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
 
@@ -51,6 +52,7 @@ public class SlidingTabsBasicFragment extends Fragment {
     static final String LOG_TAG = "SlidingTabsBasicFragment";
 
     private static final Map<Integer, Course.TypeCourse> raceTypeSpinnerPositionToType = new HashMap<>();
+
     static {
         raceTypeSpinnerPositionToType.put(0, Course.TypeCourse.VELO);
         raceTypeSpinnerPositionToType.put(1, Course.TypeCourse.APIED);
@@ -180,18 +182,23 @@ public class SlidingTabsBasicFragment extends Fragment {
                     // Add the newly created View to the ViewPager
                     container.addView(view);
 
-                    ListView listView = (ListView) view.findViewById(R.id.historiquecourse_lstview);
+                    ListView listViewHistorique = (ListView) view.findViewById(R.id.historiquecourse_lstview);
                     ArrayList<HistoriqueDeCourse> lstCourse = new ArrayList<>();
                     lstCourse = AppDatabase.getInstance().getAllLastRaces();
                     if (lstCourse != null) {
                         ArrayAdapterDeCourse adapterDeCourse = new ArrayAdapterDeCourse(getActivity(), R.layout.historique_une_course, lstCourse);
-                        listView.setAdapter(adapterDeCourse);
+                        listViewHistorique.setAdapter(adapterDeCourse);
                     }
                     break;
 
                 case 2:
                     view = getActivity().getLayoutInflater().inflate(R.layout.fragment_accomplissement,
                             container, false);
+                    ListView listViewSucces = (ListView) view.findViewById(R.id.accomplissement_lstview);
+                    ArrayList<Achievement> lstAchievement = new ArrayList<>();
+                    lstAchievement = AppDatabase.getInstance().getAllAchievement();
+                    ArrayAdapterAchievement adapteurAchievement=  new ArrayAdapterAchievement(getActivity(), R.layout.accomplissement_un_accomplissement, lstAchievement);
+                    listViewSucces.setAdapter(adapteurAchievement);
                     // Add the newly created View to the ViewPager
                     container.addView(view);
                     break;
@@ -205,9 +212,10 @@ public class SlidingTabsBasicFragment extends Fragment {
         /**
          * Dans une vue, remplit les données cumulatives en définissant le contenu des
          * vues du fragment en conséquence.
+         *
          * @param statsFragmentView Vue de statistiques cumulatives.
          */
-        private void populateCumulativeStatsView(final View statsFragmentView){
+        private void populateCumulativeStatsView(final View statsFragmentView) {
             Spinner raceTypeChooser = (Spinner) statsFragmentView.findViewById(R.id.stats_spin_racetype);
 
             raceTypeChooser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -217,13 +225,14 @@ public class SlidingTabsBasicFragment extends Fragment {
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
             });
 
             updateCumulativeStatsView(statsFragmentView, raceTypeSpinnerPositionToType.get(0));
         }
 
-        private void updateCumulativeStatsView(View view, Course.TypeCourse typeCourse){
+        private void updateCumulativeStatsView(View view, Course.TypeCourse typeCourse) {
             final AppDatabase db = AppDatabase.getInstance();
 
             TextView nbRacesLabel = (TextView) view.findViewById(R.id.stats_lbl_nbraces);
@@ -234,12 +243,12 @@ public class SlidingTabsBasicFragment extends Fragment {
 
             nbRacesLabel.setText(getString(R.string.nbraces) + " " + db.getNumberRaces(typeCourse));
             durationLabel.setText(getString(R.string.totalduration) + " "
-                    + Formatting.formatNiceDuration(db.getTotalDuration(typeCourse)));
+                    + Formatting.formatNiceDuration(db.getTotalDurationInSeconds(typeCourse)));
             distanceLabel.setText(getString(R.string.totaldistance) + " "
                     + Formatting.formatDistance(db.getTotalDistance(typeCourse)));
             caloriesLabel.setText(getString(R.string.totalcalories) + " " + db.getTotalCalories(typeCourse));
 
-            if(typeCourse == Course.TypeCourse.APIED) {
+            if (typeCourse == Course.TypeCourse.APIED) {
                 stepsLabel.setVisibility(View.VISIBLE);
                 stepsLabel.setText(getString(R.string.totalsteps) + " " + db.getTotalSteps());
             } else {
