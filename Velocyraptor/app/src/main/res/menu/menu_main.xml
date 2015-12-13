@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ca.qc.bdeb.p55.velocyraptor.MapActivity">
-    <item android:id="@+id/menu_stats" android:title="Statistiques"
+    <item android:id="@+id/menu_stats" android:title="@string/title_activity_stats"
         android:orderInCategory="100" app:showAsAction="always" />
-    <item android:id="@+id/menu_share" android:title="Partager" android:icon="@drawable/ic_share"
+    <item android:id="@+id/menu_share" android:title="@string/share" android:icon="@drawable/ic_share"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
 </menu>

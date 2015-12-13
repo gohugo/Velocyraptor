@@ -1,91 +1,85 @@
 <resources>
     <string name="app_name">Velocyraptor</string>
-    <string name="title_activity_map">Course</string>
 
-    <string name="title_activity_stats">Statistiques</string>
+    <string name="title_activity_map">Race</string>
+    <string name="title_activity_stats">Statistics</string>
+    <string name="share">Share</string>
 
-    <string name="title_section1">Cumulatif</string>
-    <string name="title_section2">Historique</string>
-    <string name="title_section3">Accomplissements</string>
+    <string name="title_section1">Cumulative</string>
+    <string name="title_section2">History</string>
+    <string name="title_section3">Achievements</string>
 
     <!-- Historique -->
     <array name="months">
-        <item>janvier</item>
-        <item>février</item>
-        <item>mars</item>
-        <item>avril</item>
-        <item>mai</item>
-        <item>juin</item>
-        <item>juillet</item>
-        <item>août</item>
-        <item>septembre</item>
-        <item>octobre</item>
-        <item>novembre</item>
-        <item>décembre</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </array>
     <string name="calories">&#160;calories</string>
-    <string name="steps">&#160;pas</string>
+    <string name="steps">&#160;steps</string>
 
     <!--Map Activity -->
     <string name="Start">Start</string>
     <string name="Pause">Pause</string>
     <string name="Resume">Resume</string>
     <string name="Stop">Stop</string>
-    <string name="reachedAchievements1">Bravo ! Vous avez atteint&#160;</string>
-    <string name="reachedAchievements2_singular">&#160;accomplissement :</string>
-    <string name="reachedAchievements2_plural">&#160;accomplissements :</string>
-    <string name="footrace">Course à pied</string>
-    <string name="bikerace">Course à vélo</string>
-    <string name="choixcourse">veuillez choisir un type de course!</string>
+    <string name="reachedAchievements1">Congratulations ! You have reached&#160;</string>
+    <string name="reachedAchievements2_singular">&#160;achievement :</string>
+    <string name="reachedAchievements2_plural">&#160;achievements :</string>
+    <string name="footrace">Foot Race</string>
+    <string name="bikerace">Bike Race</string>
+    <string name="choixcourse">Please choose a race type.</string>
     <!-- Types de courses pour les stats cumulatives -->
     <array name="race_types_stats">
-        <item>Courses à vélo</item>
-        <item>Courses à pied</item>
+        <item>Foot Races</item>
+        <item>Bike Races</item>
     </array>
 
     <!-- Statistiques cumulatives -->
-    <string name="nbraces">Nombre de courses :</string>
-    <string name="totalduration">Durée totale :</string>
-    <string name="totaldistance">Distance totale :</string>
-    <string name="totalcalories">Calories totales :</string>
-    <string name="totalsteps">Nombre de pas :</string>
-
-    <!--Description des succes-->
-    <string name="burn1calorie"> brulé une calorie !</string>
-    <string name="complete_first_foot_race"> Vous avez complété votre première course à pied!</string>
-    <!--message des succes atteint-->
-    <string name="win_burn1calorie"> Vous avez brulé une calorie !</string>
-    <string name="win_complete_first_foot_race"> Vous avez complété votre première course à pied!</string>
+    <string name="nbraces">Number of races :</string>
+    <string name="totalduration">Total duration :</string>
+    <string name="totaldistance">Total distance :</string>
+    <string name="totalcalories">Total calories :</string>
+    <string name="totalsteps">Number of steps :</string>
 
     <!-- Partage sur les médias sociaux -->
-    <string name="share1">Avec l\'application Velocyraptor, j\'ai&#160;</string>
-    <string name="share_ran">couru</string>
-    <string name="share_cycled">pédalé</string>
-    <string name="share2">&#160;kilomètres en&#160;</string>
+    <string name="share1">With application Velocyraptor, I have&#160;</string>
+    <string name="share_ran">ran</string>
+    <string name="share_cycled">cycled</string>
+    <string name="share2">&#160;kilometers in&#160;</string>
     <string name="share3">&#160;minutes&#160;</string>
-    <string name="share4_opt">&#160;secondes&#160;</string>
-    <string name="share5">et dépensé&#160;</string>
+    <string name="share4_opt">&#160;seconds&#160;</string>
+    <string name="share5">and spent&#160;</string>
     <string name="share6">&#160;calories !</string>
-    <string name="no_race">Aucune course n\'a été débutée.</string>
+    <string name="no_race">No race has begun.</string>
 
     <!-- Accomplissements (association avec l'ID) -->
-    <string name="achievement1">Brûler une calorie (c\'est un départ !)</string>
-    <string name="achievement2">Compléter une course à pied</string>
-    <string name="achievement3">Compléter une course à vélo</string>
-    <string name="achievement4">Parcourir 500 mètres dans une course à pied</string>
-    <string name="achievement5">Parcourir 1 km dans une course à pied</string>
-    <string name="achievement6">Parcourir 2 km dans une course à pied</string>
-    <string name="achievement7">Parcourir 5 km dans une course à pied</string>
-    <string name="achievement8">Parcourir 42,2 km dans une course à pied</string>
-    <string name="achievement9">Faire une course à pied d\'au moins 10 minutes</string>
-    <string name="achievement10">Faire une course à pied d\'au moins 20 minutes</string>
-    <string name="achievement11">Avoir eu une vitesse moyenne de 8 km/h ou plus à pied</string>
-    <string name="achievement12">Avoir eu une vitesse moyenne de 11 km/h ou plus à pied</string>
-    <string name="achievement13">Pédaler 5 km dans une course à vélo</string>
-    <string name="achievement14">Pédaler 20 km dans une course à vélo</string>
-    <string name="achievement15">Pédaler 100 km dans une course à vélo</string>
-    <string name="achievement16">Faire une course à vélo d\'au moins 30 minutes</string>
-    <string name="achievement17">Faire une course à vélo d\'au moins 60 minutes</string>
-    <string name="achievement18">Faire une course à vélo d\'au moins 90 minutes</string>
-    <string name="achievement19">Atteindre tous les autres accomplissements</string>
+    <string name="achievement1">Burn a calorie (It\'s a start!)</string>
+    <string name="achievement2">Complete a foot race</string>
+    <string name="achievement3">Complete a bike race</string>
+    <string name="achievement4">Run 500 meters in the same race</string>
+    <string name="achievement5">Run 1 km in the same race</string>
+    <string name="achievement6">Run 2 km in the same race</string>
+    <string name="achievement7">Run 5 km in the same race</string>
+    <string name="achievement8">Run 42.2 km in the same race</string>
+    <string name="achievement9">Run for at least 10 minutes in the same race</string>
+    <string name="achievement10">Run for at least 20 minutes in the same race</string>
+    <string name="achievement11">Have an average speed of 8 km/h or higher on foot during a race</string>
+    <string name="achievement12">Have an average speed of 11 km/h or higher on foot during a race</string>
+    <string name="achievement13">Cycle 5 km in the same race</string>
+    <string name="achievement14">Cycle 20 km in the same race</string>
+    <string name="achievement15">Cycle 100 km in the same race</string>
+    <string name="achievement16">Cycle for at least 30 minutes in the same race</string>
+    <string name="achievement17">Cycle for at least 60 minutes in the same race</string>
+    <string name="achievement18">Cycle for at least 90 minutes in the same race</string>
+    <string name="achievement19">Reach all other achievements</string>
 </resources>

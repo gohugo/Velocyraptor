@@ -20,12 +20,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class StatsActivity extends AppCompatActivity {
-
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    ViewPager mViewPager;
     private android.support.v7.widget.Toolbar toolbar;
 
     @Override
@@ -33,12 +27,10 @@ public class StatsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
 
-
         // The toolBar
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
 
         setSupportActionBar(toolbar);
-
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -48,12 +40,10 @@ public class StatsActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_stats, menu);
-
 
         return true;
     }
