@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -27,6 +28,7 @@ public class AppDatabase extends SQLiteOpenHelper {
 
     private static final String TABLE_RACES = "races";
     private static final String TABLE_RACES_TYPE = "type";
+    private static final String TABLE_RACES_TIMESTAMP = "timestamp";
     private static final String TABLE_RACES_LENGTH = "length";
     private static final String TABLE_RACES_DISTANCE = "distance";
     private static final String TABLE_RACES_CALORIES = "calories";
@@ -68,6 +70,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_RACES + " (" +
                 COL_ID + " integer primary key autoincrement," +
                 TABLE_RACES_TYPE + " integer not null," +
+                TABLE_RACES_TIMESTAMP + " integer not null," +
                 TABLE_RACES_LENGTH + " integer not null," +
                 TABLE_RACES_DISTANCE + " integer not null," +
                 TABLE_RACES_CALORIES + " integer not null," +
@@ -94,7 +97,8 @@ public class AppDatabase extends SQLiteOpenHelper {
     }
 
     /**
-     * Ajoute une course terminée et définit son chemin comme celui de la dernière course effectuée.
+     * Ajoute une course terminée et définit son chemin comme celui de la dernière course effectuée,
+     * et sa date comme étant la date actuelle.
      *
      * @param markers Endroits où l'utilisateur est passé.
      * @param course  Course.
@@ -104,6 +108,7 @@ public class AppDatabase extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(TABLE_RACES_TYPE, course.getTypeCourse().ordinal());
+        values.put(TABLE_RACES_TIMESTAMP, new Date().getTime() / 1000);
         values.put(TABLE_RACES_LENGTH, course.getElapsedMilliseconds());
         values.put(TABLE_RACES_DISTANCE, course.getDistanceInMeters());
         values.put(TABLE_RACES_CALORIES, course.getCalories());
@@ -123,15 +128,6 @@ public class AppDatabase extends SQLiteOpenHelper {
         }
 
         db.close();
-    }
-
-    /**
-     * Ajoute un accomplissement à la BDD (déjà ouverte).
-     * @param db
-     * @param achievement
-     */
-    public void initAchievement(SQLiteDatabase db, Achievement achievement) {
-
     }
 
 
@@ -203,24 +199,24 @@ public class AppDatabase extends SQLiteOpenHelper {
     public List<HistoriqueDeCourse> getAllLastRaces() {
         ArrayList<HistoriqueDeCourse> lstCourses = new ArrayList<>();
 
-
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuerry = "SELECT * FROM " + TABLE_RACES + " order by " + COL_ID + " DESC";
         Cursor cursor = db.rawQuery(selectQuerry, null);
-        try {
-            if (cursor != null) {
-                cursor.moveToFirst();
 
-                do {
-                    String abc = cursor.getString(0);
-                    lstCourses.add(new HistoriqueDeCourse(cursor.getInt(1) == 0 ? Course.TypeCourse.APIED : Course.TypeCourse.VELO, cursor.getString(2), cursor.getInt(3), cursor.getInt(4), cursor.getInt(5)));
-                } while (cursor.moveToNext());
-            }
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                Course.TypeCourse typeCourse = cursor.getInt(cursor.getColumnIndex(TABLE_RACES_TYPE))
+                        == Course.TypeCourse.APIED.ordinal() ? Course.TypeCourse.APIED : Course.TypeCourse.VELO;
+                int duration = cursor.getInt(cursor.getColumnIndex(TABLE_RACES_LENGTH));
+                int distance = cursor.getInt(cursor.getColumnIndex(TABLE_RACES_DISTANCE));
+                int calories = cursor.getInt(cursor.getColumnIndex(TABLE_RACES_CALORIES));
+                int steps = cursor.getInt(cursor.getColumnIndex(TABLE_RACES_STEPS));
+                int timestamp = cursor.getInt(cursor.getColumnIndex(TABLE_RACES_TIMESTAMP));
 
-
-        } catch (CursorIndexOutOfBoundsException e) {
-            lstCourses = null;
+                lstCourses.add(new HistoriqueDeCourse(typeCourse, duration, distance, calories, steps, timestamp));
+            } while (cursor.moveToNext());
         }
+
         return lstCourses;
     }
 
