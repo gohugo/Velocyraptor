@@ -275,8 +275,8 @@ pour que l'on puisse sauvegader si il on été
 
     private void initialiserLesSuccesDeBase(SQLiteDatabase db) {
         lstInitialAchievement = new ArrayList<>();
-        lstInitialAchievement.add(new Achievement("burn1calorie", false));
-        lstInitialAchievement.add(new Achievement("complete_first_foot_race", false));
+        lstInitialAchievement.add(new Achievement("burn 1 calorie", false));
+        lstInitialAchievement.add(new Achievement("complete first foot race", false));
         for (Achievement achievement : lstInitialAchievement) {
             AppDatabase.getInstance().initAchievement(db, achievement);
         }

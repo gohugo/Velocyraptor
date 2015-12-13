@@ -14,9 +14,8 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Large Text"
             android:id="@+id/accomplissement_lbl_description"
-            android:textAlignment="gravity"
-            android:gravity="center"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:inputType="textMultiLine" />
 
         <TextView
             android:layout_width="match_parent"
