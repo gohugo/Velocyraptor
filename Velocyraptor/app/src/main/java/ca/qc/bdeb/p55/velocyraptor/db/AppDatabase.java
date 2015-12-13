@@ -200,7 +200,7 @@ public class AppDatabase extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HistoriqueDeCourse> getAllLastRaces() {
+    public List<HistoriqueDeCourse> getAllLastRaces() {
         ArrayList<HistoriqueDeCourse> lstCourses = new ArrayList<>();
 
 
@@ -224,22 +224,24 @@ public class AppDatabase extends SQLiteOpenHelper {
         return lstCourses;
     }
 
-    public ArrayList<Achievement> getAllAchievements() {
+    public List<Achievement> getAllAchievements() {
         SQLiteDatabase db = getReadableDatabase();
-        ArrayList<Achievement> lstAchievement = new ArrayList<>();
+        ArrayList<Achievement> achievements = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + TABLE_ACHIEVEMENTS + " order by " + TABLE_ACHIEVEMENTS_REACHED;
+        final String selectQuery = "SELECT * FROM " + TABLE_ACHIEVEMENTS
+                + " order by " + TABLE_ACHIEVEMENTS_REACHED + " desc";
+
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndex(COL_ID));
                 boolean isReached = cursor.getInt(cursor.getColumnIndex(TABLE_ACHIEVEMENTS_REACHED)) == 1;
-                lstAchievement.add(new Achievement(id, isReached));
+                achievements.add(new Achievement(id, isReached));
             } while (cursor.moveToNext());
         }
 
-        return lstAchievement;
+        return achievements;
     }
 
     public void markAchievementAsReached(int id){

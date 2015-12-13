@@ -13,6 +13,9 @@
     <string name="Pause">Pause</string>
     <string name="Resume">Resume</string>
     <string name="Stop">Stop</string>
+    <string name="reachedAchievements1">Bravo ! Vous avez atteint&#160;</string>
+    <string name="reachedAchievements2_singular">&#160;accomplissement :</string>
+    <string name="reachedAchievements2_plural">&#160;accomplissements :</string>
 
     <!--type de clourse-->
     <array name="race_types_stats">

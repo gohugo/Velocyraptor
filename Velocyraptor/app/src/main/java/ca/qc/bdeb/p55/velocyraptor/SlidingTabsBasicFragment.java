@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -181,7 +182,7 @@ public class SlidingTabsBasicFragment extends Fragment {
                     container.addView(view);
 
                     ListView listViewHistorique = (ListView) view.findViewById(R.id.historiquecourse_lstview);
-                    ArrayList<HistoriqueDeCourse> lstCourse = AppDatabase.getInstance().getAllLastRaces();
+                    List<HistoriqueDeCourse> lstCourse = AppDatabase.getInstance().getAllLastRaces();
                     if (lstCourse != null) {
                         ArrayAdapterDeCourse adapterDeCourse = new ArrayAdapterDeCourse(getActivity(), R.layout.historique_une_course, lstCourse);
                         listViewHistorique.setAdapter(adapterDeCourse);
@@ -192,7 +193,7 @@ public class SlidingTabsBasicFragment extends Fragment {
                     view = getActivity().getLayoutInflater().inflate(R.layout.fragment_accomplissement,
                             container, false);
                     ListView achievementListView = (ListView) view.findViewById(R.id.accomplissement_lstview);
-                    ArrayList<Achievement> lstAchievement = AppDatabase.getInstance().getAllAchievements();
+                    List<Achievement> lstAchievement = AppDatabase.getInstance().getAllAchievements();
                     achievementListView.setAdapter(new ArrayAdapterAchievement(getActivity(), R.layout.accomplissement_un_accomplissement, lstAchievement));
                     container.addView(view);
                     break;

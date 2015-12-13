@@ -1,5 +1,7 @@
 package ca.qc.bdeb.p55.velocyraptor.model;
 
+import java.util.List;
+
 import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
 
 /**
@@ -47,6 +49,15 @@ public class Achievement {
             CYCLE_90_MINUTES,
             REACH_ALL_ACHIEVEMENTS
     };
+
+    public static boolean areAllButLastAchievementsReached(List<Achievement> achievements){
+        for(int i = 0; i < achievements.size() - 1; i++){
+            if(!achievements.get(i).isReached())
+                return false;
+        }
+
+        return true;
+    }
 
     private int id;
     private boolean reached;

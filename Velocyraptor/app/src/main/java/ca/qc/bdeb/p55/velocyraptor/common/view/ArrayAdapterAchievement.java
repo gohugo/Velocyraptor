@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ca.qc.bdeb.p55.velocyraptor.R;
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
@@ -21,7 +22,7 @@ import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
  * Crée les items affichés dans la liste des accomplissements.
  */
 public class ArrayAdapterAchievement extends ArrayAdapter<Achievement> {
-    public ArrayAdapterAchievement(Context context, int resource, ArrayList<Achievement> item) {
+    public ArrayAdapterAchievement(Context context, int resource, List<Achievement> item) {
         super(context, resource, item);
     }
 
@@ -49,7 +50,7 @@ public class ArrayAdapterAchievement extends ArrayAdapter<Achievement> {
             holder.lblDescription.setText(getContext().getString(achievementDescriptionResourceId));
 
             Bitmap reachedImage = BitmapFactory.decodeResource(getContext().getResources(),
-                    achievement.isReached() || Math.random() > 0.5 ? R.mipmap.ic_reached_achievement : R.mipmap.ic_unreached_achievement);
+                    achievement.isReached() ? R.mipmap.ic_reached_achievement : R.mipmap.ic_unreached_achievement);
             holder.imgReached.setImageBitmap(reachedImage);
 
             convertView.setTag(holder);

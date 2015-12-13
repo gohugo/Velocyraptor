@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 import ca.qc.bdeb.p55.velocyraptor.R;
@@ -23,7 +24,7 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<HistoriqueDeCourse> {
     Context context;
 
 
-    public ArrayAdapterDeCourse(Context context, int resource, ArrayList<HistoriqueDeCourse> item) {
+    public ArrayAdapterDeCourse(Context context, int resource, List<HistoriqueDeCourse> item) {
         super(context, resource, item);
         this.context = context;
 
