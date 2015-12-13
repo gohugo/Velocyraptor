@@ -16,7 +16,7 @@ import ca.qc.bdeb.p55.velocyraptor.R;
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 
 /**
- * Created by hugo on 2015-12-12.
+ * Crée les items affichés dans la liste des accomplissements.
  */
 public class ArrayAdapterAchievement extends ArrayAdapter<Achievement> {
     private Context context;
@@ -45,11 +45,12 @@ public class ArrayAdapterAchievement extends ArrayAdapter<Achievement> {
             convertView = mInflater.inflate(R.layout.accomplissement_un_accomplissement, null);
             holder = new AchievementHolder();
             //ici initialiser les component de la listview
-//            holder.txtNom = (TextView) convertView.findViewById(R.id.unclient_lbl_nom);
             holder.lblDescription = (TextView) convertView.findViewById(R.id.accomplissement_lbl_description);
             holder.lblReached = (TextView) convertView.findViewById(R.id.accomplissement_lbl_reached);
 
-            holder.lblDescription.setText(rowItem.getName());
+            int achievementDescriptionResourceId = getContext().getResources()
+                    .getIdentifier("achievement" + rowItem.getId(), "string", getContext().getPackageName());
+            holder.lblDescription.setText(getContext().getString(achievementDescriptionResourceId));
             holder.lblReached.setText(rowItem.isReached()?"done":"in progres");
 
 

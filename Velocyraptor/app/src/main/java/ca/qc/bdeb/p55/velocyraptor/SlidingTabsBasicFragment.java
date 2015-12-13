@@ -195,9 +195,8 @@ public class SlidingTabsBasicFragment extends Fragment {
                     view = getActivity().getLayoutInflater().inflate(R.layout.fragment_accomplissement,
                             container, false);
                     ListView listViewSucces = (ListView) view.findViewById(R.id.accomplissement_lstview);
-                    ArrayList<Achievement> lstAchievement = new ArrayList<>();
-                    lstAchievement = AppDatabase.getInstance().getAllAchievement();
-                    ArrayAdapterAchievement adapteurAchievement=  new ArrayAdapterAchievement(getActivity(), R.layout.accomplissement_un_accomplissement, lstAchievement);
+                    ArrayList<Achievement> lstAchievement = AppDatabase.getInstance().getAllAchievements();
+                    ArrayAdapterAchievement adapteurAchievement = new ArrayAdapterAchievement(getActivity(), R.layout.accomplissement_un_accomplissement, lstAchievement);
                     listViewSucces.setAdapter(adapteurAchievement);
                     // Add the newly created View to the ViewPager
                     container.addView(view);

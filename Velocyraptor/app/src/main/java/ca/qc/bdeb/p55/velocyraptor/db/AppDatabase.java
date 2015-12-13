@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import ca.qc.bdeb.p55.velocyraptor.MapActivity;
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
@@ -34,7 +33,6 @@ public class AppDatabase extends SQLiteOpenHelper {
     private static final String TABLE_RACES_STEPS = "steps";
 
     private static final String TABLE_ACHIEVEMENTS = "achievements";
-    private static final String TABLE_ACHIEVEMENTS_NAME = "name";
     private static final String TABLE_ACHIEVEMENTS_REACHED = "reached";
 
     private static final String TABLE_LASTFOOTRACE = "lastfootrace";
@@ -76,8 +74,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                 TABLE_RACES_STEPS + " integer" +
                 ")");
         db.execSQL("create table " + TABLE_ACHIEVEMENTS + " (" +
-                COL_ID + " integer primary key autoincrement," +
-                TABLE_ACHIEVEMENTS_NAME + " text not null," +
+                COL_ID + " integer primary key," +
                 TABLE_ACHIEVEMENTS_REACHED + " tinyint not null default 0" +
                 ")");
 
@@ -89,7 +86,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                     ")");
         }
 
-        initialiserLesSuccesDeBase(db);
+        initializeAllAchievements(db);
     }
 
     @Override
@@ -134,10 +131,7 @@ public class AppDatabase extends SQLiteOpenHelper {
      * @param achievement
      */
     public void initAchievement(SQLiteDatabase db, Achievement achievement) {
-        ContentValues values = new ContentValues();
-        values.put(TABLE_ACHIEVEMENTS_NAME, achievement.getName());
-        values.put(TABLE_ACHIEVEMENTS_REACHED, achievement.isReached());
-        db.insert(TABLE_ACHIEVEMENTS, null, values);
+
     }
 
 
@@ -230,36 +224,34 @@ public class AppDatabase extends SQLiteOpenHelper {
         return lstCourses;
     }
 
-    public ArrayList<Achievement> getAllAchievement() {
+    public ArrayList<Achievement> getAllAchievements() {
+        SQLiteDatabase db = getReadableDatabase();
         ArrayList<Achievement> lstAchievement = new ArrayList<>();
 
+        String selectQuery = "SELECT * FROM " + TABLE_ACHIEVEMENTS + " order by " + TABLE_ACHIEVEMENTS_REACHED;
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuerry = "SELECT * FROM " + TABLE_ACHIEVEMENTS + " order by " + TABLE_ACHIEVEMENTS_REACHED;
-        Cursor cursor = db.rawQuery(selectQuerry, null);
-        try {
-            if (cursor != null) {
-                cursor.moveToFirst();
-
-                do {
-                    String abc = cursor.getString(0);
-                    lstAchievement.add(new Achievement(cursor.getString(1), cursor.getInt(2) == 1));
-                } while (cursor.moveToNext());
-            }
-
-
-        } catch (CursorIndexOutOfBoundsException e) {
-            lstAchievement = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex(COL_ID));
+                boolean isReached = cursor.getInt(cursor.getColumnIndex(TABLE_ACHIEVEMENTS_REACHED)) == 1;
+                lstAchievement.add(new Achievement(id, isReached));
+            } while (cursor.moveToNext());
         }
+
         return lstAchievement;
     }
 
     /*
 méthode qui initialise les succes de base de l"application et qui les sauvegardes dans la bd
 pour que l'on puisse sauvegader si il on été*/
-    private void initialiserLesSuccesDeBase(SQLiteDatabase db) {
-        initAchievement(db, new Achievement("burn 1 calorie", false));
-        initAchievement(db, new Achievement("complete first foot race", false));
+    private void initializeAllAchievements(SQLiteDatabase db) {
+        for(int achievement : Achievement.ALL_ACHIEVEMENT_INDEXES) {
+            ContentValues values = new ContentValues();
+            values.put(COL_ID, achievement);
+            values.put(TABLE_ACHIEVEMENTS_REACHED, false);
+            db.insert(TABLE_ACHIEVEMENTS, null, values);
+        }
     }
 
 

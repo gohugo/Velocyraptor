@@ -44,4 +44,25 @@
     <string name="share5">et dépensé&#160;</string>
     <string name="share6">&#160;calories !</string>
     <string name="no_race">Aucune course n\'a été débutée.</string>
+
+    <!-- Accomplissements (association avec l'ID) -->
+    <string name="achievement1">Brûler une calorie (c\'est un départ !)</string>
+    <string name="achievement2">Compléter une course à pied</string>
+    <string name="achievement3">Compléter une course à vélo</string>
+    <string name="achievement4">Parcourir 500 mètres dans une course à pied</string>
+    <string name="achievement5">Parcourir 1 km dans une course à pied</string>
+    <string name="achievement6">Parcourir 2 km dans une course à pied</string>
+    <string name="achievement7">Parcourir 5 km dans une course à pied</string>
+    <string name="achievement8">Parcourir 42,2 km dans une course à pied</string>
+    <string name="achievement9">Faire une course à pied d\'au moins 10 minutes</string>
+    <string name="achievement10">Faire une course à pied d\'au moins 20 minutes</string>
+    <string name="achievement11">Avoir eu une vitesse moyenne de 8 km/h ou plus à pied</string>
+    <string name="achievement12">Avoir eu une vitesse moyenne de 11 km/h ou plus à pied</string>
+    <string name="achievement13">Pédaler 5 km dans une course à vélo</string>
+    <string name="achievement14">Pédaler 20 km dans une course à vélo</string>
+    <string name="achievement15">Pédaler 100 km dans une course à vélo</string>
+    <string name="achievement16">Faire une course à vélo d\'au moins 30 minutes</string>
+    <string name="achievement17">Faire une course à vélo d\'au moins 60 minutes</string>
+    <string name="achievement18">Faire une course à vélo d\'au moins 90 minutes</string>
+    <string name="achievement19">Atteindre tous les autres accomplissements</string>
 </resources>
