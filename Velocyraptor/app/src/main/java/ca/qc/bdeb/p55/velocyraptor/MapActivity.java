@@ -1,5 +1,7 @@
 package ca.qc.bdeb.p55.velocyraptor;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +38,7 @@ import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.Ghost;
+import ca.qc.bdeb.p55.velocyraptor.model.PromptRunnable;
 import ca.qc.bdeb.p55.velocyraptor.model.RaceMarker;
 
 
@@ -61,6 +65,7 @@ public class MapActivity extends AppCompatActivity implements
     private Button btnStop;
     private Button btnResume;
     private Button btnPause;
+
 
     private final Runnable onChronometerTick = new Runnable() {
         @Override
@@ -139,17 +144,16 @@ public class MapActivity extends AppCompatActivity implements
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                course = new Course(Course.TypeCourse.APIED); // TODO choix type
-                ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.APIED);
-                course.setContext(getApplicationContext());
-                course.setOnChronometerTick(onChronometerTick);
-                course.demarrer();
 
-                if (lastLocation != null)
-                    moveUserToOnMap(lastLocation);
+                promptForResult(new PromptRunnable() {
+                    // put whatever code you want to run after user enters a result
+                    public void run() {
 
-                switchButtonsToCurrentRaceState();
-                setMapControlsEnabled(false);
+
+                    }
+                });
+
+
             }
         });
 
@@ -169,6 +173,7 @@ public class MapActivity extends AppCompatActivity implements
                 course.demarrer();
                 switchButtonsToCurrentRaceState();
                 setMapControlsEnabled(false);
+
             }
         });
 
@@ -181,6 +186,68 @@ public class MapActivity extends AppCompatActivity implements
                 setMapControlsEnabled(true);
             }
         });
+    }
+
+    public void promptForResult(final PromptRunnable postrun) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setMessage(R.string.choixcourse);
+
+
+        // procedure for when the ok button is clicked.
+        alert.setPositiveButton(R.string.footrace, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                dialog.dismiss();
+                // set value from the dialog inside our runnable implementation
+                stepText.setVisibility(View.VISIBLE);
+                course = new Course(Course.TypeCourse.APIED);
+                ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.APIED);
+                course.setContext(getApplicationContext());
+                course.setOnChronometerTick(onChronometerTick);
+                course.demarrer();
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
+
+
+                if (lastLocation != null)
+                    moveUserToOnMap(lastLocation);
+
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
+                // ** HERE IS WHERE THE MAGIC HAPPENS! **
+                // now that we have stored the value, lets run our Runnable
+                postrun.run();
+                return;
+            }
+        });
+        alert.setNegativeButton(R.string.bikerace, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                // set value from the dialog inside our runnable implementation
+                stepText.setVisibility(View.GONE);
+                course = new Course(Course.TypeCourse.VELO);
+                ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.VELO);
+                course.setContext(getApplicationContext());
+                course.setOnChronometerTick(onChronometerTick);
+                course.demarrer();
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
+
+
+                if (lastLocation != null)
+                    moveUserToOnMap(lastLocation);
+
+                switchButtonsToCurrentRaceState();
+                setMapControlsEnabled(false);
+                // ** HERE IS WHERE THE MAGIC HAPPENS! **
+                // now that we have stored the value, lets run our Runnable
+                postrun.run();
+            }
+        });
+
+        alert.show();
     }
 
     private void switchButtonsToCurrentRaceState() {
@@ -218,10 +285,11 @@ public class MapActivity extends AppCompatActivity implements
 
     /**
      * Affiche un Toast indiquant que des accomplissements ont été atteints.
+     *
      * @param achievements Accomplissements atteints.
      */
-    private void showReachedAchievements(List<Achievement> achievements){
-        if(achievements.size() > 0) {
+    private void showReachedAchievements(List<Achievement> achievements) {
+        if (achievements.size() > 0) {
             StringBuilder messageBuilder = new StringBuilder();
 
             messageBuilder.append(getString(R.string.reachedAchievements1))

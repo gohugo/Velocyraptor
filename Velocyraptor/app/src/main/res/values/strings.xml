@@ -16,7 +16,9 @@
     <string name="reachedAchievements1">Bravo ! Vous avez atteint&#160;</string>
     <string name="reachedAchievements2_singular">&#160;accomplissement :</string>
     <string name="reachedAchievements2_plural">&#160;accomplissements :</string>
-
+    <string name="footrace">Courses à pied</string>
+    <string name="bikerace">Courses à vélo</string>
+    <string name="choixcourse">veuillez choisir un type de course!</string>
     <!--type de clourse-->
     <array name="race_types_stats">
         <item>Courses à vélo</item>
