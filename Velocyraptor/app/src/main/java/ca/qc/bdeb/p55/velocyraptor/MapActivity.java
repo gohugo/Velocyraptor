@@ -196,29 +196,8 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
-
-                // set value from the dialog inside our runnable implementation
-
-
-                course = new Course(Course.TypeCourse.APIED);
-                ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.APIED);
-                course.setContext(getApplicationContext());
-                course.setOnChronometerTick(onChronometerTick);
-                course.demarrer();
-                switchButtonsToCurrentRaceState();
-                setMapControlsEnabled(false);
-
-
-                if (lastLocation != null)
-                    moveUserToOnMap(lastLocation);
-
-                switchButtonsToCurrentRaceState();
-                setMapControlsEnabled(false);
-                // ** HERE IS WHERE THE MAGIC HAPPENS! **
-                // now that we have stored the value, lets run our Runnable
                 stepLayout.setVisibility(View.VISIBLE);
                 postrun.raceTypeChosen(Course.TypeCourse.APIED);
-                return;
 
             }
         });
@@ -226,31 +205,8 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-
-                // set value from the dialog inside our runnable implementation
-
-
-                course = new Course(Course.TypeCourse.VELO);
-                ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.VELO);
-                course.setContext(getApplicationContext());
-                course.setOnChronometerTick(onChronometerTick);
-                course.demarrer();
-                switchButtonsToCurrentRaceState();
-                setMapControlsEnabled(false);
-
-
-                if (lastLocation != null)
-                    moveUserToOnMap(lastLocation);
-
-                switchButtonsToCurrentRaceState();
-                setMapControlsEnabled(false);
-                // ** HERE IS WHERE THE MAGIC HAPPENS! **
-                // now that we have stored the value, lets run our Runnable
-
-
                 stepLayout.setVisibility(View.GONE);
                 postrun.raceTypeChosen(Course.TypeCourse.VELO);
-
             }
         });
 
@@ -268,6 +224,7 @@ public class MapActivity extends AppCompatActivity implements
 
         if (lastLocation != null)
             moveUserToOnMap(lastLocation);
+        googleMap.clear();
 
         switchButtonsToCurrentRaceState();
         setMapControlsEnabled(false);
@@ -486,7 +443,7 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     private void drawGhostPath(List<RaceMarker> markers) {
-        for (RaceMarker marker : ghost.getReadMarkers()) {
+        for (RaceMarker marker : markers) {
             if (lastGhostLocation != null) {
                 drawGhostLine(lastGhostLocation, marker.getLocation());
             }
