@@ -12,14 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.games.Games;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -30,7 +28,6 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
@@ -38,7 +35,6 @@ import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
 import ca.qc.bdeb.p55.velocyraptor.model.Ghost;
-import ca.qc.bdeb.p55.velocyraptor.model.PromptRunnable;
 import ca.qc.bdeb.p55.velocyraptor.model.RaceMarker;
 
 
@@ -59,6 +55,7 @@ public class MapActivity extends AppCompatActivity implements
     public TextView chronometerText;
     private TextView distanceText;
     private TextView calorieText;
+    private LinearLayout stepLayout;
     private TextView stepText;
     private android.support.v7.widget.Toolbar toolbar;
     private Button btnStart;
@@ -107,6 +104,7 @@ public class MapActivity extends AppCompatActivity implements
         distanceText = (TextView) findViewById(R.id.mapactivity_lbl_distancevalue);
         calorieText = (TextView) findViewById(R.id.mapactivity_lbl_calorievalue);
         stepText = (TextView) findViewById(R.id.mapactivity_lbl_rythmevalue);
+        stepLayout = (LinearLayout) findViewById(R.id.map_layout_steps);
 
         initialiserBoutons();
 
@@ -144,16 +142,12 @@ public class MapActivity extends AppCompatActivity implements
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                promptForResult(new PromptRunnable() {
-                    // put whatever code you want to run after user enters a result
-                    public void run() {
-
-
+                promptForResult(new StartDialogCallback() {
+                    @Override
+                    public void raceTypeChosen(Course.TypeCourse typeCourse) {
+                        beginChosenRaceType(typeCourse);
                     }
                 });
-
-
             }
         });
 
@@ -188,66 +182,45 @@ public class MapActivity extends AppCompatActivity implements
         });
     }
 
-    public void promptForResult(final PromptRunnable postrun) {
+    public void promptForResult(final StartDialogCallback postrun) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setMessage(R.string.choixcourse);
 
-
-        // procedure for when the ok button is clicked.
         alert.setPositiveButton(R.string.footrace, new DialogInterface.OnClickListener() {
+            @Override
             public void onClick(DialogInterface dialog, int whichButton) {
-
                 dialog.dismiss();
-                // set value from the dialog inside our runnable implementation
-                stepText.setVisibility(View.VISIBLE);
-                course = new Course(Course.TypeCourse.APIED);
-                ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.APIED);
-                course.setContext(getApplicationContext());
-                course.setOnChronometerTick(onChronometerTick);
-                course.demarrer();
-                switchButtonsToCurrentRaceState();
-                setMapControlsEnabled(false);
-
-
-                if (lastLocation != null)
-                    moveUserToOnMap(lastLocation);
-
-                switchButtonsToCurrentRaceState();
-                setMapControlsEnabled(false);
-                // ** HERE IS WHERE THE MAGIC HAPPENS! **
-                // now that we have stored the value, lets run our Runnable
-                postrun.run();
-                return;
+                stepLayout.setVisibility(View.VISIBLE);
+                postrun.raceTypeChosen(Course.TypeCourse.APIED);
             }
         });
         alert.setNegativeButton(R.string.bikerace, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                // set value from the dialog inside our runnable implementation
-                stepText.setVisibility(View.GONE);
-                course = new Course(Course.TypeCourse.VELO);
-                ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.VELO);
-                course.setContext(getApplicationContext());
-                course.setOnChronometerTick(onChronometerTick);
-                course.demarrer();
-                switchButtonsToCurrentRaceState();
-                setMapControlsEnabled(false);
-
-
-                if (lastLocation != null)
-                    moveUserToOnMap(lastLocation);
-
-                switchButtonsToCurrentRaceState();
-                setMapControlsEnabled(false);
-                // ** HERE IS WHERE THE MAGIC HAPPENS! **
-                // now that we have stored the value, lets run our Runnable
-                postrun.run();
+                stepLayout.setVisibility(View.GONE);
+                postrun.raceTypeChosen(Course.TypeCourse.VELO);
             }
         });
 
         alert.show();
+    }
+
+    public void beginChosenRaceType(Course.TypeCourse typeCourse) {
+        course = new Course(typeCourse);
+        ghost = Ghost.startGhostFromLastRace(typeCourse);
+        stepText.setVisibility(View.VISIBLE);
+        course.setContext(getApplicationContext());
+        course.setOnChronometerTick(onChronometerTick);
+        course.demarrer();
+        setMapControlsEnabled(false);
+
+        if (lastLocation != null)
+            moveUserToOnMap(lastLocation);
+
+        switchButtonsToCurrentRaceState();
+        setMapControlsEnabled(false);
     }
 
     private void switchButtonsToCurrentRaceState() {
@@ -483,4 +456,7 @@ public class MapActivity extends AppCompatActivity implements
         return new LatLng(location.getLatitude(), location.getLongitude());
     }
 
+    public interface StartDialogCallback {
+        void raceTypeChosen(Course.TypeCourse typeCourse);
+    }
 }
