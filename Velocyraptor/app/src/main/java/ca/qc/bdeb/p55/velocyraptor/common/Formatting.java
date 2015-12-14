@@ -1,6 +1,13 @@
 package ca.qc.bdeb.p55.velocyraptor.common;
 
+import android.content.Context;
+import android.content.res.Resources;
+
 import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import ca.qc.bdeb.p55.velocyraptor.R;
 
 /**
  * Méthodes qui permettent de formater des valeurs en chaîne de caractères.
@@ -83,6 +90,36 @@ public final class Formatting {
                 .append(df.format(seconds))
                 .append(".")
                 .append(df.format(hundredths));
+
+        return builder.toString();
+    }
+
+    public static String formatDate(long timestamp, Resources resources){
+        Date date = new Date(timestamp * 1000);
+        String[] months = resources.getStringArray(R.array.months);
+        StringBuilder builder = new StringBuilder();
+
+        if(Locale.getDefault().getDisplayLanguage().equalsIgnoreCase("fr")){
+            if(date.getDate() == 1)
+                builder.append("1er");
+            else
+                builder.append(date.getDate());
+
+            builder.append(months[date.getMonth()]).append(" ").append(date.getYear() + 1900);
+        } else {
+            builder.append(months[date.getMonth()]).append(" ");
+
+            if(date.getDate() == 1)
+                builder.append("1st");
+            else if(date.getDate() == 2)
+                builder.append("2nd");
+            else if(date.getDate() == 3)
+                builder.append("3rd");
+            else
+                builder.append(date.getDate()).append("th");
+
+            builder.append(" ").append(date.getYear() + 1900);
+        }
 
         return builder.toString();
     }
