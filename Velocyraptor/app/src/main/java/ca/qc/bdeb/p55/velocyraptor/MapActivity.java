@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +60,8 @@ public class MapActivity extends AppCompatActivity implements
     public TextView chronometerText;
     private TextView distanceText;
     private TextView calorieText;
-    private TextView stepText;
+    private LinearLayout layoutStepText;
+    private TextView stepText;;
     private android.support.v7.widget.Toolbar toolbar;
     private Button btnStart;
     private Button btnStop;
@@ -107,6 +109,7 @@ public class MapActivity extends AppCompatActivity implements
         distanceText = (TextView) findViewById(R.id.mapactivity_lbl_distancevalue);
         calorieText = (TextView) findViewById(R.id.mapactivity_lbl_calorievalue);
         stepText = (TextView) findViewById(R.id.mapactivity_lbl_rythmevalue);
+        layoutStepText = (LinearLayout) findViewById(R.id.layoutpas);
 
         initialiserBoutons();
 
@@ -200,7 +203,8 @@ public class MapActivity extends AppCompatActivity implements
 
                 dialog.dismiss();
                 // set value from the dialog inside our runnable implementation
-                stepText.setVisibility(View.VISIBLE);
+
+                layoutStepText.setVisibility(View.VISIBLE);
                 course = new Course(Course.TypeCourse.APIED);
                 ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.APIED);
                 course.setContext(getApplicationContext());
@@ -226,7 +230,8 @@ public class MapActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 // set value from the dialog inside our runnable implementation
-                stepText.setVisibility(View.GONE);
+
+                layoutStepText.setVisibility(View.GONE);
                 course = new Course(Course.TypeCourse.VELO);
                 ghost = Ghost.startGhostFromLastRace(Course.TypeCourse.VELO);
                 course.setContext(getApplicationContext());
