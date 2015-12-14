@@ -8,6 +8,7 @@
     <string name="title_section2">Historique</string>
     <string name="title_section3">Accomplissements</string>
 
+    <!-- Historique -->
     <array name="months">
         <item>janvier</item>
         <item>février</item>
@@ -22,6 +23,8 @@
         <item>novembre</item>
         <item>décembre</item>
     </array>
+    <string name="calories">&#160;calories</string>
+    <string name="steps">&#160;pas</string>
 
     <!--Map Activity -->
     <string name="Start">Start</string>

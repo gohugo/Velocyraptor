@@ -54,12 +54,12 @@ public class ArrayAdapterDeCourse extends ArrayAdapter<HistoriqueDeCourse> {
             holder.lblTypedeCourse.setText(nomCourse);
             holder.lblDate.setText(Formatting.formatDate(ancienneCourse.getTimestamp(), getContext().getResources()));
             holder.lblTemps.setText(Formatting.formatExactDuration(ancienneCourse.getDurationInMilliseconds()));
-            holder.lblDistance.setText(Integer.toString(ancienneCourse.getTotalDistance()));
-            holder.lblCalorie.setText(Integer.toString(ancienneCourse.getNbCalorieBurn()));
+            holder.lblDistance.setText(Formatting.formatDistance(ancienneCourse.getTotalDistance()));
+            holder.lblCalorie.setText(Integer.toString(ancienneCourse.getNbCalorieBurn()) + getContext().getString(R.string.calories));
 
             if (ancienneCourse.getTypeCourse() == Course.TypeCourse.APIED) {
                 holder.lblNbStep.setVisibility(View.VISIBLE);
-                holder.lblNbStep.setText(Integer.toString(ancienneCourse.getNbStep()));
+                holder.lblNbStep.setText(Integer.toString(ancienneCourse.getNbStep()) + getContext().getString(R.string.steps));
             }
 
             convertView.setTag(holder);
