@@ -3,7 +3,6 @@ package ca.qc.bdeb.p55.velocyraptor.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -14,7 +13,7 @@ import java.util.List;
 
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
-import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
+import ca.qc.bdeb.p55.velocyraptor.model.ItemCourse;
 import ca.qc.bdeb.p55.velocyraptor.model.RaceMarker;
 
 /**
@@ -196,8 +195,8 @@ public class AppDatabase extends SQLiteOpenHelper {
     }
 
 
-    public List<HistoriqueDeCourse> getAllLastRaces() {
-        ArrayList<HistoriqueDeCourse> lstCourses = new ArrayList<>();
+    public List<ItemCourse> getAllLastRaces() {
+        ArrayList<ItemCourse> lstCourses = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuerry = "SELECT * FROM " + TABLE_RACES + " order by " + COL_ID + " DESC";
@@ -213,7 +212,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                 int steps = cursor.getInt(cursor.getColumnIndex(TABLE_RACES_STEPS));
                 int timestamp = cursor.getInt(cursor.getColumnIndex(TABLE_RACES_TIMESTAMP));
 
-                lstCourses.add(new HistoriqueDeCourse(typeCourse, duration, distance, calories, steps, timestamp));
+                lstCourses.add(new ItemCourse(typeCourse, duration, distance, calories, steps, timestamp));
             } while (cursor.moveToNext());
         }
 

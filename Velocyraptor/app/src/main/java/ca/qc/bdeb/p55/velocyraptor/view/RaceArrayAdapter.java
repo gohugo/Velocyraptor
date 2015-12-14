@@ -13,11 +13,11 @@ import java.util.List;
 import ca.qc.bdeb.p55.velocyraptor.R;
 import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
-import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
+import ca.qc.bdeb.p55.velocyraptor.model.ItemCourse;
 
 
-public class RaceArrayAdapter extends ArrayAdapter<HistoriqueDeCourse> {
-    public RaceArrayAdapter(Context context, int resource, List<HistoriqueDeCourse> item) {
+public class RaceArrayAdapter extends ArrayAdapter<ItemCourse> {
+    public RaceArrayAdapter(Context context, int resource, List<ItemCourse> item) {
         super(context, resource, item);
     }
 
@@ -33,7 +33,7 @@ public class RaceArrayAdapter extends ArrayAdapter<HistoriqueDeCourse> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         CourseHistoryHolder holder;
-        final HistoriqueDeCourse ancienneCourse = getItem(position);
+        final ItemCourse ancienneCourse = getItem(position);
 
         LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
@@ -47,23 +47,23 @@ public class RaceArrayAdapter extends ArrayAdapter<HistoriqueDeCourse> {
             holder.lblCalorie = (TextView) convertView.findViewById(R.id.historiquecourse_lbl_calorievalue);
             holder.lblNbStep = (TextView) convertView.findViewById(R.id.historiquecourse_lbl_nbpasvalue);
 
-            String nomCourse = getContext().getString(ancienneCourse.getTypeCourse()
-                    == Course.TypeCourse.APIED ? R.string.footrace : R.string.bikerace);
-
-            holder.lblTypedeCourse.setText(nomCourse);
-            holder.lblDate.setText(Formatting.formatDate(ancienneCourse.getTimestamp(), getContext().getResources()));
-            holder.lblTemps.setText(Formatting.formatExactDuration(ancienneCourse.getDurationInMilliseconds()));
-            holder.lblDistance.setText(Formatting.formatDistance(ancienneCourse.getTotalDistance()));
-            holder.lblCalorie.setText(Integer.toString(ancienneCourse.getNbCalorieBurn()) + getContext().getString(R.string.calories));
-
-            if (ancienneCourse.getTypeCourse() == Course.TypeCourse.APIED) {
-                holder.lblNbStep.setVisibility(View.VISIBLE);
-                holder.lblNbStep.setText(Integer.toString(ancienneCourse.getNbStep()) + getContext().getString(R.string.steps));
-            }
-
             convertView.setTag(holder);
         } else {
             holder = (CourseHistoryHolder) convertView.getTag();
+        }
+
+        String nomCourse = getContext().getString(ancienneCourse.getTypeCourse()
+                == Course.TypeCourse.APIED ? R.string.footrace : R.string.bikerace);
+
+        holder.lblTypedeCourse.setText(nomCourse);
+        holder.lblDate.setText(Formatting.formatDate(ancienneCourse.getTimestamp(), getContext().getResources()));
+        holder.lblTemps.setText(Formatting.formatExactDuration(ancienneCourse.getDurationInMilliseconds()));
+        holder.lblDistance.setText(Formatting.formatDistance(ancienneCourse.getTotalDistance()));
+        holder.lblCalorie.setText(Integer.toString(ancienneCourse.getNbCalorieBurn()) + getContext().getString(R.string.calories));
+
+        if (ancienneCourse.getTypeCourse() == Course.TypeCourse.APIED) {
+            holder.lblNbStep.setVisibility(View.VISIBLE);
+            holder.lblNbStep.setText(Integer.toString(ancienneCourse.getNbStep()) + getContext().getString(R.string.steps));
         }
 
         return convertView;

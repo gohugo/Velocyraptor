@@ -38,7 +38,7 @@ import ca.qc.bdeb.p55.velocyraptor.common.Formatting;
 import ca.qc.bdeb.p55.velocyraptor.db.AppDatabase;
 import ca.qc.bdeb.p55.velocyraptor.model.Achievement;
 import ca.qc.bdeb.p55.velocyraptor.model.Course;
-import ca.qc.bdeb.p55.velocyraptor.model.HistoriqueDeCourse;
+import ca.qc.bdeb.p55.velocyraptor.model.ItemCourse;
 
 /**
  * A basic sample which shows how to use {@link SlidingTabLayout}
@@ -171,7 +171,7 @@ public class SlidingTabsBasicFragment extends Fragment {
                     container.addView(view);
 
                     ListView listViewHistorique = (ListView) view.findViewById(R.id.historiquecourse_lstview);
-                    List<HistoriqueDeCourse> lstCourse = AppDatabase.getInstance().getAllLastRaces();
+                    List<ItemCourse> lstCourse = AppDatabase.getInstance().getAllLastRaces();
                     if (lstCourse != null) {
                         RaceArrayAdapter adapterDeCourse = new RaceArrayAdapter(getActivity(), R.layout.list_item_course, lstCourse);
                         listViewHistorique.setAdapter(adapterDeCourse);

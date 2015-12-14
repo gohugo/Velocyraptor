@@ -3,7 +3,7 @@ package ca.qc.bdeb.p55.velocyraptor.model;
 /**
  * Created by hugo on 2015-12-11.
  */
-public class HistoriqueDeCourse {
+public class ItemCourse {
     private Course.TypeCourse typeCourse;
     private int duration;
     private int totalDistance;
@@ -11,8 +11,8 @@ public class HistoriqueDeCourse {
     private int nbCalorieBurn;
     private long timestamp;
 
-    public HistoriqueDeCourse(Course.TypeCourse typeCourse, int durationInMilliseconds,
-                              int totalDistance, int nbCaloriesBurned, int nbSteps, long timestamp) {
+    public ItemCourse(Course.TypeCourse typeCourse, int durationInMilliseconds,
+                      int totalDistance, int nbCaloriesBurned, int nbSteps, long timestamp) {
         this.typeCourse = typeCourse;
         this.duration = durationInMilliseconds;
         this.nbStep = nbSteps;

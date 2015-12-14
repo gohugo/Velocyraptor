@@ -108,9 +108,7 @@ public class MapActivity extends AppCompatActivity implements
         calorieText = (TextView) findViewById(R.id.mapactivity_lbl_calorievalue);
         stepText = (TextView) findViewById(R.id.mapactivity_lbl_rythmevalue);
 
-
         stepLayout = (LinearLayout) findViewById(R.id.map_layout_steps);
-
 
         initialiserBoutons();
 
@@ -225,6 +223,7 @@ public class MapActivity extends AppCompatActivity implements
 
         if (lastLocation != null)
             moveUserToOnMap(lastLocation);
+        lastGhostLocation = null;
         googleMap.clear();
 
         switchButtonsToCurrentRaceState();
